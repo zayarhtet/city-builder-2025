@@ -9,9 +9,8 @@ public class EventModel {
     private static EventModel em = null;
     private Position position;
     private CellItem cell;
+    private JButton btn;
     private static boolean isFree = true;
-    private static boolean isEnabled = true;
-    private JButton btn = null;
 
     private EventModel(Position saved, CellItem cell) {
         this.cell = cell;
@@ -32,13 +31,11 @@ public class EventModel {
         return em;
     }
     public static EventModel EventModelInstance(CellItem cell) {
-        if (!isEnabled) return null;
         if (isFree()) em = new EventModel(cell);
         isFree = false;
         return em;
     }
     public static EventModel EventModelInstance(Position saved, CellItem cell) {
-        if (!isEnabled) return null;
         if (isFree()) em = new EventModel(saved, cell);
         isFree = false;
         return em;
@@ -46,7 +43,6 @@ public class EventModel {
     public static void DeleteInstance() {
         isFree = true;
         em = null;
-        isEnabled = true;
     }
     public static boolean isFree() {
         return isFree;
@@ -54,14 +50,12 @@ public class EventModel {
     public static void disableModel() {
         if (em == null) return;
         isFree = true;
-        isEnabled = false;
     }
     public static void enableModel() {
         if (em == null) return;
         isFree = false;
-        isEnabled = true;
     }
-    public static boolean isModelDisabled() {
-        return !isEnabled;
+    public static boolean isGenuinelyFree() {
+        return em == null;
     }
 }

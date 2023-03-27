@@ -10,9 +10,9 @@ import java.awt.event.MouseListener;
 import java.net.URL;
 
 public class InGameButton extends JButton implements MouseListener {
-    private Image element;
-    private String imgPath;
-    private CellItem cell;
+    private final Image element;
+    private final String imgPath;
+    private final CellItem cell;
     private boolean isSelected = false;
 
     private Color neutral = new Color(184,207,229,255);
@@ -41,7 +41,7 @@ public class InGameButton extends JButton implements MouseListener {
             isSelected = false;
             return;
         }
-        if (EventModel.isModelDisabled()) return;
+        if (!EventModel.isGenuinelyFree()) return;
         EventModel em = EventModel.EventModelInstance(cell);
         setContentAreaFilled(true);
         setBackground(selectedColor);

@@ -19,22 +19,24 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Map.entry;
+
 public class CityMap extends JPanel implements MouseMotionListener, MouseListener {
     private JFrame                  mainFrame;
     private int                     tile_size = 30;
-    private Map<CellItem, Image>    graphics = new HashMap<>();
+    private Map<CellItem, Image>    graphics = Map.ofEntries(
+            entry(CellItem.GENERAL, ResourceLoader.loadImage("resource/grass.png")),
+            entry(CellItem.H_ROAD, ResourceLoader.loadImage("resource/h-road.png")),
+            entry(CellItem.V_ROAD, ResourceLoader.loadImage("resource/v-road.png")),
+            entry(CellItem.JUNCTION_ROAD, ResourceLoader.loadImage("resource/bot-right-road.png"))
+            // you can add many graphic as you want
+    );
     private final City              city;
     public CityMap(JFrame frame) throws IOException {
         this(frame, "");
     }
     public CityMap(JFrame frame, String id) throws IOException {
         mainFrame = frame;
-
-        graphics.put(CellItem.GENERAL, ResourceLoader.loadImage("resource/grass.png"));
-        graphics.put(CellItem.H_ROAD, ResourceLoader.loadImage("resource/h-road.png"));
-        graphics.put(CellItem.V_ROAD, ResourceLoader.loadImage("resource/v-road.png"));
-        graphics.put(CellItem.JUNCTION_ROAD, ResourceLoader.loadImage("resource/bot-right-road.png"));
-        // add graphics to the Dictionary
 
         this.city = id.length() == 0? new City() : new City(id);
 
@@ -79,6 +81,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             // draw building
         }
 
+        // animation and event
         if (!EventModel.isFree()) {
             EventModel em = EventModel.getEventModelInstance();
             CellItem ct = em.getCellItem(); Position p = em.getPosition();

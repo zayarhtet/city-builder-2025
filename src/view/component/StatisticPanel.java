@@ -8,5 +8,7 @@ public class StatisticPanel extends JPanel {
     public StatisticPanel(Color theme) {
         setPreferredSize(new Dimension(1000,50));
         setBackground(theme);
+
+        //  add JLabel
     }
 }
