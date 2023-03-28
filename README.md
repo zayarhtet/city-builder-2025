@@ -30,6 +30,7 @@
 - Implement `deleteBuilding (Position p)` which will go linear search through the `buildings` ArrayList, (use `Iterator()`) and find if the given `p` is inside that building location (inside the `Building` Class, there is already stored `List<Position>`  attributes which were assigned inside `constructBuilding()`). Once you find the respective `Building`, then first, you remove that `CellItem.BUILDING` from cells, with the help of `Building.location` (`ArrayList`) [just reassign the `CellItem.GENERAL`]. After that, you can use the `.remove()` method of `iterator` to remove that Building from the buildings list. The above logic has to be done inside `Iteration`. (Zaw Moe)
 
 - `assignZone(Position p, CellItem ct)` methods which will assign the given `ct` into the `cells[][]` at `p`. And Create a new Zone object according to the `CellItem` and add it to the zones List. <br> **_[Later, we will implement the cost, and population inside Zone class and we will calculate it accordingly]_** (Mohamed)
+ - create a time mechanism (probably as int), which we could use. To follow time, speed up the game and so forth. For example increase +1 if normal time, by 2 if doble speed, end day at 3600.
 
 ## UI improvement
 
