@@ -19,11 +19,11 @@
 
 ## Backend
 
-- Implement the `isOccupied()` method inside `City` Class, which takes `Position p` and checks if that cell is occupied or not (in other words, checking if the `CellItem` is `GENERAL` or not)
+- Implement the `isOccupied()` method inside `City` Class, which takes `Position p` and checks if that cell is occupied or not (in other words, checking if the `CellItem` is `GENERAL` or not) (Dominykas)
 
-- Implement `Database` class which handles the JSON files, and minimum `CRUD` has to be implemented. Design the JSON Structure. `Database` class will have to work only with `City` Class.
+- Implement `Database` class which handles the JSON files, and minimum `CRUD` has to be implemented. Design the JSON Structure. `Database` class will have to work only with `City` Class. (Dominykas)
 
-- Implement the `constructBuilding(Position p; CellItem ct)` method, which will assign the `CellItem.BUILDING` to the `cells[][]` with `p` and it is not enough to set only 1 cell, you have to assign according to the `CellItem.BUILDING.tiles`. The given parameter p represents the top left cell. And the last thing is to create a new `Building` Object, assign respective attributes, and store it inside buildings (`ArrayList`). [Later, we will implement the satisfaction]
+- Implement the `constructBuilding(Position p; CellItem ct)` method, which will assign the `CellItem.BUILDING` to the `cells[][]` with `p` and it is not enough to set only 1 cell, you have to assign according to the `CellItem.BUILDING.tiles`. The given parameter p represents the top left cell. And the last thing is to create a new `Building` Object, assign respective attributes, and store it inside buildings (`ArrayList`). [Later, we will implement the satisfaction] (Dominykas)
 
 - Implement `deleteRoad(Position p)` which will delete from the `cells[][]` (changing back to `CellItem.GENERAL`) and remove it from roads (ArrayList).
 
