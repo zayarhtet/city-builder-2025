@@ -3,7 +3,7 @@
 ## Frontend
 - Replace the button in MenuPanel with a .png graphic as an icon.
 
-- Write the Dialog box that extends `JComponent`. Redirect to the Dialog box if the `New Game` Button is clicked (Check `ActionListener` of `MenuButton`). When the Dialog box is confirmed (Check the `ActionListener` of Dialog box), the CityMap page appeared <br>**_[no backend yet now, will have to implement later, after database implementation]_**. (Zayar)
+- Write the Dialog box that extends `JComponent`. Redirect to the Dialog box if the `New Game` Button is clicked (Check `ActionListener` of `MenuButton`). When the Dialog box is confirmed (Check the `ActionListener` of Dialog box), the CityMap page appeared <br>**_[no backend yet now, will have to implement later, after database implementation]_**. (Mohamed)
 
 - Create a new button inside `StatisticPanel`, which is a `Back to Menu` button (for now, just a text button, later replaced with an icon) which will save the current game and go back to the Menu Page (implement `ActionListener` (`mouseClicked()`) for this button) (Mohamed)
 
