@@ -28,7 +28,8 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             entry(CellItem.GENERAL, ResourceLoader.loadImage("resource/grass.png")),
             entry(CellItem.H_ROAD, ResourceLoader.loadImage("resource/h-road.png")),
             entry(CellItem.V_ROAD, ResourceLoader.loadImage("resource/v-road.png")),
-            entry(CellItem.JUNCTION_ROAD, ResourceLoader.loadImage("resource/bot-right-road.png"))
+            entry(CellItem.JUNCTION_ROAD, ResourceLoader.loadImage("resource/bot-right-road.png")),
+            entry(CellItem.DEL_OPT, ResourceLoader.loadImage("resource/delete.png"))
             // you can add many graphic as you want
     );
     private final City              city;
@@ -98,7 +99,12 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         EventModel em = EventModel.getEventModelInstance();
         // check if the target is occupied
         // check what needs to be built with em.getCellItem() and with Switch case and call respective methods from city.
-        city.buildRoad(em.getPosition(), em.getCellItem());
+        if(em.getCellItem() == CellItem.DEL_OPT){
+            city.demolish(em.getPosition());
+        }
+        else {
+            city.buildRoad(em.getPosition(), em.getCellItem());
+        }
 //        EventModel.DeleteInstance();
         repaint();
     }

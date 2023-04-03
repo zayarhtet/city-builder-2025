@@ -8,7 +8,8 @@ public enum CellItem {
     H_ROAD('*',1),
     V_ROAD('$',1),
     JUNCTION_ROAD('@', 1),
-    TRANSMISSION_LINE('-',1);
+    TRANSMISSION_LINE('-',1),
+    DEL_OPT('d',0);
     public final char representation;
     public final int tiles;
     CellItem(char rep, int size) { representation = rep; tiles= size; }

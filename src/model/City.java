@@ -44,6 +44,43 @@ public class City {
         // Create a Road class and handle the fee and maintenance
     }
 
+    public void demolish(Position p){
+        CellItem ct = cells[p.y][p.x];
+        switch (ct){
+            case H_ROAD:
+            case V_ROAD:
+            case JUNCTION_ROAD:
+                deleteRoad(p); break;
+            case POLICE_DEPARTMENT:
+            case STADIUM:
+                deleteBuilding(p); break;
+            case GENERAL:
+            default:
+                break;
+        }
+    }
+
+    public void deleteRoad(Position p){
+        cells[p.y][p.x] = CellItem.GENERAL;
+        roads.remove(p);
+    }
+
+    public void deleteTransmissionLine(Position p){
+        transmissionLines.remove(p);
+    }
+
+    public void deleteBuilding(Position p){
+
+
+        for(Building b : buildings){
+            boolean partOf = true; // check
+            // buildings[y][x].getBuildingSize()
+            // 1 -> (x,y)
+            // get top left pos
+            // 2 -> (x,y) (x+1,y) (x,y+1) (x+1,y+1)
+        }
+    }
+
     public CellItem getCellItem(int row, int col) { return cells[row][col]; }
     public int getColumnCount() { return col; }
     public int getRowCount() { return row; }
