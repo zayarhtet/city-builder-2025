@@ -31,7 +31,7 @@ public class MainWindow extends JFrame {
         try { add(map = new CityMap(this), BorderLayout.CENTER); } catch (IOException e) {}
 
 
-        JPanel statisticPanel = new StatisticPanel(theme);
+        JPanel statisticPanel = new StatisticPanel(this, theme);
         add(statisticPanel, BorderLayout.NORTH);
 
         JPanel buttonPanel = new InGameButtonPanel(this, theme);
