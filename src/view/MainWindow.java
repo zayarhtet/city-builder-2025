@@ -6,6 +6,8 @@ import view.component.StatisticPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 
@@ -16,6 +18,7 @@ public class MainWindow extends JFrame {
                         height      = 698;
     private Color       theme       = new Color(126,121,224,255);
 
+    private Timer       timer;
     public MainWindow() {
         setTitle("CityBuilder 2025");
         setSize(width, height);
@@ -37,8 +40,19 @@ public class MainWindow extends JFrame {
         JPanel buttonPanel = new InGameButtonPanel(this, theme);
         add(buttonPanel, BorderLayout.EAST);
 
+        map.initiateRandomVehicles(2);
+        timer = new Timer(50, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!EventModel.isGenuinelyFree()) return;
+
+                map.repaint();
+            }
+        });
+
         setPreferredSize(new Dimension(width,height));
         System.out.println(getSize());
+        timer.start();
         setResizable(false);
         setLocationRelativeTo(null);
         pack();

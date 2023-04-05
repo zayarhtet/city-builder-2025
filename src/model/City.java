@@ -34,6 +34,7 @@ public class City {
     public City(String id) {
         this.row = 100; this.col = 100;
         // USE Database class and obtain the data for this id
+
         // This is the constructor, so you have to initiate the private attribute with the help of database
 
     }
@@ -52,6 +53,11 @@ public class City {
     public boolean isOccupied(Position p) {
         // check if the parameter position is General field or not
         return false;
+    }
+
+    public boolean isRoad(int row, int col) {
+        if (row >= this.row || col >= this.col) return false;
+        return cells[row][col] == CellItem.H_ROAD || cells[row][col] == CellItem.JUNCTION_ROAD || cells[row][col] == CellItem.V_ROAD;
     }
 
 }
