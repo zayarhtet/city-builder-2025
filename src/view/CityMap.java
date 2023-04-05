@@ -32,9 +32,10 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             entry(CellItem.H_ROAD, ResourceLoader.loadImage("resource/h-road.png")),
             entry(CellItem.V_ROAD, ResourceLoader.loadImage("resource/v-road.png")),
             entry(CellItem.JUNCTION_ROAD, ResourceLoader.loadImage("resource/bot-right-road.png")),
+            entry(CellItem.DEL_OPT, ResourceLoader.loadImage("resource/delete.png")),
+            entry(CellItem.POLICE_DEPARTMENT, ResourceLoader.loadImage("resource/ps.png")),
             entry(CellItem.R_CAR, ResourceLoader.loadImage("resource/right-car.png")),
             entry(CellItem.D_CAR, ResourceLoader.loadImage("resource/down-car.png"))
-
             // you can add many graphic as you want
     );
     public CityMap(JFrame frame) throws IOException {
@@ -55,6 +56,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         Graphics2D gr = (Graphics2D) g;
         int w = city.getColumnCount();
         int h = city.getRowCount();
+        g.clearRect(0,0,w*tile_size,h*tile_size);
         List<Position> roads = city.getRoadList();
 
         // base Zone rendering
@@ -84,6 +86,11 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         Iterator<Building> iter = buildings.iterator();
         while(iter.hasNext()) {
             // draw building
+            Position p = iter.next().topLeft();
+            CellItem c = city.getCellItem(p.y,p.x);
+            Image img = graphics.get(c);
+            if(img == null) continue;
+            gr.drawImage(img, p.x*tile_size, p.y*tile_size, c.tiles*tile_size, c.tiles*tile_size, null );
         }
 
         // animation and event
@@ -91,8 +98,8 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             EventModel em = EventModel.getEventModelInstance();
             CellItem ct = em.getCellItem(); Position p = em.getPosition();
             // After implementing isOccupied() method, then comment out this.
-            // if (city.isOccupied(p)) return;
-            gr.drawImage(graphics.get(ct), p.x*tile_size, p.y*tile_size,tile_size*ct.tiles , tile_size*ct.tiles , null);
+            if (city.isOccupied(p)) return;
+            gr.drawImage(graphics.get(ct), p.x*tile_size, p.y*tile_size,ct.tiles*tile_size , ct.tiles*tile_size , null);
         }
 
         if (!EventModel.isGenuinelyFree()) return;
@@ -199,7 +206,20 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         EventModel em = EventModel.getEventModelInstance();
         // check if the target is occupied
         // check what needs to be built with em.getCellItem() and with Switch case and call respective methods from city.
-        city.buildRoad(em.getPosition(), em.getCellItem());
+        switch (em.getCellItem()){
+            case V_ROAD:
+            case JUNCTION_ROAD:
+            case H_ROAD:
+                city.buildRoad(em.getPosition(), em.getCellItem()); break;
+            case STADIUM:
+            case POLICE_DEPARTMENT:
+                city.constructBuilding(em.getPosition(),em.getCellItem()); break;
+            case DEL_OPT:
+                city.demolish(em.getPosition()); break;
+            default:
+                break;
+        }
+
 //        EventModel.DeleteInstance();
 //        initiateRandomVehicles(2);
         repaint();

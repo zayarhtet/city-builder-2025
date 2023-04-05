@@ -9,6 +9,7 @@ public class EventModel {
     private static EventModel em = null;
     private Position position;
     private CellItem cell;
+    private String option;
     private JButton btn;
     private static boolean isFree = true;
 
