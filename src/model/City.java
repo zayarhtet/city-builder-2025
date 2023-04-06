@@ -28,6 +28,7 @@ public class City {
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
                 cells[i][j] = CellItem.GENERAL;
+//                if (i == 10) cells[i][j] = CellItem.H_ROAD;
             }
         }
     }
@@ -126,7 +127,12 @@ public class City {
 
     public boolean isRoad(int row, int col) {
         if (row >= this.row || col >= this.col) return false;
-        return cells[row][col] == CellItem.H_ROAD || cells[row][col] == CellItem.JUNCTION_ROAD || cells[row][col] == CellItem.V_ROAD;
+        return cells[row][col] == CellItem.H_ROAD || cells[row][col] == CellItem.JUNCTION_ROAD;
+    }
+
+    public boolean isVRoad(int row, int col) {
+        if (row >= this.row || col >= this.col) return false;
+        return cells[row][col] == CellItem.V_ROAD || cells[row][col] == CellItem.JUNCTION_ROAD;
     }
 
 }

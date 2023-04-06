@@ -33,7 +33,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             entry(CellItem.V_ROAD, ResourceLoader.loadImage("resource/v-road.png")),
             entry(CellItem.JUNCTION_ROAD, ResourceLoader.loadImage("resource/bot-right-road.png")),
             entry(CellItem.DEL_OPT, ResourceLoader.loadImage("resource/delete.png")),
-            entry(CellItem.POLICE_DEPARTMENT, ResourceLoader.loadImage("resource/ps.png")),
+            entry(CellItem.POLICE_DEPARTMENT, ResourceLoader.loadImage("resource/pd-2.png")),
             entry(CellItem.R_CAR, ResourceLoader.loadImage("resource/right-car.png")),
             entry(CellItem.D_CAR, ResourceLoader.loadImage("resource/down-car.png"))
             // you can add many graphic as you want
@@ -107,82 +107,62 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         // implement vehicle rendering // row
         renderVehicles(gr);
 
-
-
     }
 
+    /*************************************** Vehicles Starts ****************************************/
     public void renderVehicles(Graphics2D gr) {
         for (int col = 0; col < vehiclesCol.length; col++) {
             for (int j = 0; j < vehiclesCol[col].length; j++) {
                 int row = vehiclesCol[col][j];
-//                vehiclesCol[col][j] = row +3 >= city.getRowCount()*tile_size? 0 : row+3;
-                vehiclesCol[col][j] = calculateVehicleMovement2(row, col);
 
-                if (!city.isRoad((row+tile_size)/tile_size,col) || !city.isRoad(row/tile_size,col)) {
-                    vehiclesCol[col][j] = ((vehiclesCol[col][j]/tile_size)*tile_size)+tile_size >= city.getRowCount()*tile_size? 0: (vehiclesCol[col][j]/tile_size)*tile_size + tile_size;
+                if ( !city.isVRoad(row/tile_size,col) || !city.isVRoad((row+tile_size)/tile_size,col)) {
+                    vehiclesCol[col][j] = calculateIgnoreRoad(row, col,vehiclesCol[col], city.getRowCount()*tile_size);
                     continue;
                 }
+                vehiclesCol[col][j] = calculateVehicleMovement(row, col, city.getRowCount(), vehiclesRow, vehiclesCol[col]);
                 gr.drawImage(graphics.get(CellItem.D_CAR), col*tile_size, row, tile_size, tile_size, null);
             }
         }
         for (int row = 0; row < vehiclesRow.length; row++) {
             for (int j = 0; j < vehiclesRow[row].length; j++) {
                 int col = vehiclesRow[row][j];
-                vehiclesRow[row][j] = calculateVehicleMovement(col, row);
 
-                if (!city.isRoad(row,(col+tile_size)/tile_size) || !city.isRoad(row,col/tile_size)){
-                    vehiclesRow[row][j] = ((vehiclesRow[row][j]/tile_size)*tile_size) + tile_size >= city.getColumnCount()*tile_size? 0: ((vehiclesRow[row][j]/tile_size)*tile_size) + tile_size;
+                if (!city.isRoad(row,col/tile_size) || !city.isRoad(row,(col+tile_size)/tile_size) ){
+                    vehiclesRow[row][j] = calculateIgnoreRoad(col, row, vehiclesRow[row], city.getColumnCount()*tile_size);
                     continue;
                 }
-//                vehiclesRow[row][j] = calculateVehicleMovement(col, row);
-//                vehiclesRow[row][j] =  col +3 >= city.getColumnCount()*tile_size? 0 : col+3;
+                vehiclesRow[row][j] = calculateVehicleMovement(col, row, city.getColumnCount(), vehiclesCol, vehiclesRow[row]);
                 gr.drawImage(graphics.get(CellItem.R_CAR), col, row*tile_size, tile_size, tile_size, null);
             }
         }
     }
-
-    private int calculateVehicleMovement(int original, int rowCars) {
-        int newValue = original+vehicleFrameRate;
-        if ((newValue+tile_size)/tile_size >= city.getColumnCount()) return 0;
-        int cars[] = vehiclesCol[(newValue+tile_size)/tile_size];
-
-        int carsTranspose[] = vehiclesRow[rowCars];
-        for (int i = 0; i < carsTranspose.length; i++) {
-            int existedCar = carsTranspose[i];
+    private int calculateIgnoreRoad(int original, int fixedAxis, int [] main, int upperBound) {
+        int newValue = ((original/tile_size)*tile_size)+tile_size >= upperBound ? 0 : ((original/tile_size)*tile_size)+tile_size;
+        for (int i = 0; i < main.length; i++) {
+            int existedCar = main[i];
             if (original == existedCar) continue;
-            if (isTwoTileTouching(newValue, rowCars*tile_size, existedCar, rowCars*tile_size)) return original;
+            if (isTwoTileTouching(newValue, fixedAxis*tile_size, existedCar, fixedAxis*tile_size)) return original;
         }
-        for (int i = 0; i< cars.length; i++) {
-            if(isTwoTileTouching(newValue, rowCars*tile_size, ((newValue+tile_size)/tile_size)*tile_size, cars[i]))  {
-                return original;
-            }
-        }
-        if (newValue >= city.getColumnCount()*tile_size) return 0;
-        else return newValue;
+        return newValue ;
     }
-    private int calculateVehicleMovement2(int original, int rowCars) {
+    private int calculateVehicleMovement(int original, int fixedAxisIndex, int upperBound, int[][] transposeAisle, int [] currentAisle) {
         int newValue = original+vehicleFrameRate;
-        if ((newValue+tile_size)/tile_size >= city.getRowCount()) return 0;
-        int cars[] = vehiclesRow[(newValue+tile_size)/tile_size];
+        if ((newValue+tile_size)/tile_size >= upperBound) return 0;
+        int cars[] = transposeAisle[(newValue+tile_size)/tile_size];
 
-        int carsTranspose[] = vehiclesCol[rowCars];
-        for (int i = 0; i < carsTranspose.length; i++) {
-            int existedCar = carsTranspose[i];
+        for (int i = 0; i < currentAisle.length; i++) {
+            int existedCar = currentAisle[i];
             if (original == existedCar) continue;
-            if (isTwoTileTouching(newValue, rowCars*tile_size, existedCar, rowCars*tile_size)) return original;
+            if (isTwoTileTouching(newValue, fixedAxisIndex*tile_size, existedCar, fixedAxisIndex*tile_size)) return original;
         }
         for (int i = 0; i< cars.length; i++) {
-            if(isTwoTileTouching(newValue, rowCars*tile_size, ((newValue+tile_size)/tile_size)*tile_size, cars[i]))  {
-                return original;
-            }
+            if(isTwoTileTouching(newValue, fixedAxisIndex*tile_size, ((newValue+tile_size)/tile_size)*tile_size, cars[i])) return original;
         }
-        if (newValue >= city.getColumnCount()*tile_size) return 0;
-        else return newValue;
+        return (newValue >= city.getColumnCount()*tile_size) ? 0 : newValue;
     }
     private boolean isTwoTileTouching(int firstX, int firstY, int secondX, int secondY) {
         return firstX < secondX+tile_size && firstX+tile_size > secondX && firstY < secondY+tile_size && firstY+tile_size > secondY;
     }
-
     public void initiateRandomVehicles(int vehicleCount) {
         vehiclesRow = new int[city.getRowCount()][vehicleCount];
         vehiclesCol = new int[city.getColumnCount()][vehicleCount];
@@ -198,6 +178,8 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             }
         }
     }
+    /*************************************** Vehicles Ends ****************************************/
+
 
     // MouseListener
     @Override
@@ -221,7 +203,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         }
 
 //        EventModel.DeleteInstance();
-//        initiateRandomVehicles(2);
+        initiateRandomVehicles(1);
         repaint();
     }
 
