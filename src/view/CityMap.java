@@ -86,7 +86,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             CellItem c = city.getCellItem(p.y,p.x);
             Image img = graphics.get(c);
             if(img == null) continue;
-            gr.drawImage(img, p.x*tile_size, p.y*tile_size, c.tiles*tile_size, c.tiles*tile_size, null );
+            gr.drawImage(img, p.x*tile_size, (p.y+c.tiles)*tile_size , c.tiles*tile_size, -c.tiles*tile_size, null );
         }
 
         // animation and event
