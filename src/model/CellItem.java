@@ -9,6 +9,8 @@ public enum CellItem {
     V_ROAD('$',1),
     JUNCTION_ROAD('@', 1),
     TRANSMISSION_LINE('-',1),
+    R_CAR('c', 1),
+    D_CAR('d', 1),
     DEL_OPT('d',0);
     public final char representation;
     public final int tiles;

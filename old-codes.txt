@@ -1,0 +1,39 @@
+    private int calculateVehicleMovement2(int original, int rowCars) {
+        int newValue = original+vehicleFrameRate;
+        if ((newValue+tile_size)/tile_size >= city.getRowCount()) return 0;
+        int cars[] = vehiclesRow[(newValue+tile_size)/tile_size];
+
+        int carsTranspose[] = vehiclesCol[rowCars];
+        for (int i = 0; i < carsTranspose.length; i++) {
+            int existedCar = carsTranspose[i];
+            if (original == existedCar) continue;
+            if (isTwoTileTouching(newValue, rowCars*tile_size, existedCar, rowCars*tile_size)) return original;
+        }
+        for (int i = 0; i< cars.length; i++) {
+            if(isTwoTileTouching(newValue, rowCars*tile_size, ((newValue+tile_size)/tile_size)*tile_size, cars[i]))  {
+                return original;
+            }
+        }
+        if (newValue >= city.getColumnCount()*tile_size) return 0;
+        else return newValue;
+    }
+
+    private int calculateVehicleMovement1(int original, int rowCars) {
+        int newValue = original+vehicleFrameRate;
+        if ((newValue+tile_size)/tile_size >= city.getColumnCount()) return 0;
+        int cars[] = vehiclesCol[(newValue+tile_size)/tile_size];
+
+        int carsTranspose[] = vehiclesRow[rowCars];
+        for (int i = 0; i < carsTranspose.length; i++) {
+            int existedCar = carsTranspose[i];
+            if (original == existedCar) continue;
+            if (isTwoTileTouching(newValue, rowCars*tile_size, existedCar, rowCars*tile_size)) return original;
+        }
+        for (int i = 0; i< cars.length; i++) {
+            if(isTwoTileTouching(newValue, rowCars*tile_size, ((newValue+tile_size)/tile_size)*tile_size, cars[i]))  {
+                return original;
+            }
+        }
+        if (newValue >= city.getColumnCount()*tile_size) return 0;
+        else return newValue;
+    }

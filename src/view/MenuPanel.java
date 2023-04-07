@@ -25,8 +25,22 @@ public class MenuPanel extends JPanel {
 
         JButton newGameButton = new MenuButton("New Game");
         newGameButton.addActionListener(e -> {
-            this.frame.hideMenuPage();
-            this.frame.showMapPage();
+            //TODO dialog box here, should The variable(gameName) be extended?
+            //TODO should it be wraped in try catch?
+            String gameName = "";
+            do {
+                gameName = (String) JOptionPane.showInputDialog("New game's name");
+                if (gameName == null) {
+                    gameName = "";
+                    break;
+                }
+            } while ((gameName.length() == 0));
+
+            if (gameName.length() > 0) {
+                frame.instantiateGame("",gameName);
+                this.frame.hideMenuPage();
+                this.frame.showMapPage();
+            }
         });
         
         menuTextPanel.add(newGameButton);

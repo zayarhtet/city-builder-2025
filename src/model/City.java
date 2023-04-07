@@ -6,23 +6,22 @@ import java.sql.Array;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class City {
+    private final String    id;
+    private String          username;
+    private final int       row = 22,
+                            col = 33;
+    private CellItem [][]   cells;
+    private List<Position>  roads = new ArrayList<>();
+    private List<Building>  buildings = new ArrayList<> ();
+    private List<Position>  transmissionLines = new ArrayList<>();
+    private List<Zone>      zones = new ArrayList<>();
 
-    private final int row, col;
-    private CellItem [][] cells;
-    private Database database;
-    private List<Position> roads = new ArrayList<>();
-    private List<Building> buildings = new ArrayList<> ();
-    private List<Position> transmissionLines = new ArrayList<>();
-    private List<Zone> zones = new ArrayList<>();
-
-    public City() {
-        this(22, 33);
-    }
-
-    public City(int row, int col) {
-        this.row = row; this.col = col;
+    public City(String username) {
+        this.id = UUID.randomUUID().toString();
+        this.username = username;
 
         cells = new CellItem[row][col];
         for (int i = 0; i < row; i++) {
@@ -30,12 +29,6 @@ public class City {
                 cells[i][j] = CellItem.GENERAL;
             }
         }
-    }
-    public City(String id) {
-        this.row = 100; this.col = 100;
-        // USE Database class and obtain the data for this id
-        // This is the constructor, so you have to initiate the private attribute with the help of database
-
     }
 
     public void buildRoad(Position p, CellItem ct) {
@@ -119,8 +112,16 @@ public class City {
     public int getRowCount() { return row; }
     public List<Position> getRoadList() { return new ArrayList<>(roads); }
     public List<Building> getBuildingList() { return new ArrayList<>(buildings); }
-    public boolean isOccupied(Position p) {
-        return cells[p.y][p.x] != CellItem.GENERAL;
+    public boolean isOccupied(Position p) { return cells[p.y][p.x] != CellItem.GENERAL; }
+    public String getId() { return this.id; }
+
+    public boolean isRoad(int row, int col) {
+        if (row >= this.row || col >= this.col) return false;
+        return cells[row][col] == CellItem.H_ROAD || cells[row][col] == CellItem.JUNCTION_ROAD;
     }
 
+    public boolean isVRoad(int row, int col) {
+        if (row >= this.row || col >= this.col) return false;
+        return cells[row][col] == CellItem.V_ROAD || cells[row][col] == CellItem.JUNCTION_ROAD;
+    }
 }
