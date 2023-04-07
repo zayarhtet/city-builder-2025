@@ -3,11 +3,12 @@ package persistence;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,15 +33,20 @@ public class Database {
         } catch (IOException e) {System.out.println(e.toString());}
     }
 
-    public List<City> loadData(){
+    public List<City> loadData() {
         Type citiesListType = new TypeToken<ArrayList<City>>(){}.getType();
 
         try (Reader reader = new FileReader(this.filePath)) {
             List<City> cities = gson.fromJson(reader, citiesListType);
-//            System.out.println(cities);
             return cities;
-        } catch (IOException e) { e.printStackTrace(); }
-        return null;
+        } catch (IOException e) {
+            try {
+                PrintWriter writer = new PrintWriter(this.filePath, "UTF-8");
+                writer.println("[]");
+                writer.close();
+            } catch (IOException ex) { ex.printStackTrace(); }
+            return loadData();
+        }
     }
 
 }
