@@ -7,7 +7,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.google.gson.reflect.TypeToken;
 import model.City;
 
 public class Database {
@@ -15,37 +19,27 @@ public class Database {
     private String filePath;
 
     public Database(){
-        this.gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-        // this.gson = new Gson();
-        this.filePath = "./SaveGames/" + filePath + ".json";
+        this.gson = new GsonBuilder().setPrettyPrinting().create();
+        this.filePath = "src/resource/database/userdata.json";
     };
 
-    public void saveGame(City city){
-        System.out.println(filePath);
+    public void saveData(List<City> cities){
         try {
             FileWriter writer = new FileWriter(this.filePath);
-            gson.toJson(city, writer);
+            gson.toJson(cities, writer);
             writer.flush();
             writer.close();
-            System.out.println("File Written");
         } catch (IOException e) {System.out.println(e.toString());}
     }
 
-    public City loadGame(){
+    public List<City> loadData(){
+        Type citiesListType = new TypeToken<ArrayList<City>>(){}.getType();
 
         try (Reader reader = new FileReader(this.filePath)) {
-
-            // Convert JSON File to Java Object
-            City city = gson.fromJson(reader, City.class);
-
-            // print staff object
-            System.out.println(city);
-            return city;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            List<City> cities = gson.fromJson(reader, citiesListType);
+//            System.out.println(cities);
+            return cities;
+        } catch (IOException e) { e.printStackTrace(); }
         return null;
     }
 

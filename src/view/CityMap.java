@@ -26,7 +26,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
     private int                     vehicleFrameRate = 3;
     private int [][]                vehiclesRow;
     private int [][]                vehiclesCol;
-    private final City              city;
+    private City                    city;
     private Map<CellItem, Image>    graphics = Map.ofEntries(
             entry(CellItem.GENERAL, ResourceLoader.loadImage("resource/grass.png")),
             entry(CellItem.H_ROAD, ResourceLoader.loadImage("resource/h-road.png")),
@@ -38,19 +38,18 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             entry(CellItem.D_CAR, ResourceLoader.loadImage("resource/down-car.png"))
             // you can add many graphic as you want
     );
-    public CityMap(JFrame frame) throws IOException {
-        this(frame, "");
-    }
-    public CityMap(JFrame frame, String id) throws IOException {
-        mainFrame = frame;
 
-        this.city = id.length() == 0? new City() : new City(id);
+    public CityMap(JFrame frame) throws IOException {
+        mainFrame = frame;
 
         addMouseMotionListener(this);
         addMouseListener(this);
         setVisible(false);
     }
-
+    public void setCity(City city) {
+        this.city = city;
+        repaint();
+    }
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D gr = (Graphics2D) g;
