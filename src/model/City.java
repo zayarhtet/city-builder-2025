@@ -105,7 +105,6 @@ public class City {
             cells[p1.y][p1.x] = CellItem.GENERAL;
         }
         buildings.remove(ind);
-        System.out.println(buildings.size());
     }
 
     public Disaster spawnDisaster(){

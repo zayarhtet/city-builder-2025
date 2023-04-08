@@ -6,10 +6,9 @@ import resource.ResourceLoader;
 import view.component.EventModel;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -37,6 +36,8 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
     );
 
     private Animator anim = new Animator();
+    private int FPS = 45;
+    private Timer timer;
 
     public CityMap(JFrame frame) throws IOException {
         mainFrame = frame;
@@ -44,6 +45,8 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         addMouseMotionListener(this);
         addMouseListener(this);
         setVisible(false);
+        timer = new Timer(1000 / FPS, new FrameListener());
+        timer.start();
     }
     public void setCity(City city) {
         this.city = city;
@@ -91,16 +94,16 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             gr.drawImage(img, p.x*tile_size, (p.y+c.tiles)*tile_size , c.tiles*tile_size, -c.tiles*tile_size, null );
         }
 
+        anim.Animate(gr);
         // animation and event
         if (!EventModel.isFree()) {
             EventModel em = EventModel.getEventModelInstance();
             CellItem ct = em.getCellItem(); Position p = em.getPosition();
             // After implementing isOccupied() method, then comment out this.
+            if (p == null) return;
             if (city.isOccupied(p)) return;
             gr.drawImage(graphics.get(ct), p.x*tile_size, p.y*tile_size,ct.tiles*tile_size , ct.tiles*tile_size , null);
         }
-
-        anim.Animate(gr);
 
         if (!EventModel.isGenuinelyFree()) return;
 
@@ -181,14 +184,12 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
     }
     /*************************************** Vehicles Ends ****************************************/
 
-    void initDisaster(){
+    void initDisaster(EventModel em){
         Disaster d = city.spawnDisaster();
         Random r = new Random();
-        //Position start = new Position(r.nextInt(getWidth()),r.nextInt(getHeight()));
-        Position start = new Position(40,0);
         List<Building> bs = city.getBuildingList();
         int ind = r.nextInt(bs.size());
-        anim.SetUp(d,start,bs.get(ind).topLeft());
+        anim.SetUp(d,bs.get(ind).topLeft());
     }
 
 
@@ -210,14 +211,16 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             case DEL_OPT:
                 city.demolish(em.getPosition()); break;
             case DISASTER:
-                initDisaster(); break;
+                if(!anim.isAnimating()){
+                    initDisaster(em); break;
+                }
             default:
                 break;
         }
 
 //        EventModel.DeleteInstance();
         initiateRandomVehicles(1);
-        repaint();
+        //repaint();
     }
 
     @Override
@@ -229,13 +232,13 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
     @Override
     public void mouseEntered(MouseEvent e) {
         EventModel.enableModel();
-        repaint();
+        //repaint();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         EventModel.disableModel();
-        repaint();
+        //repaint();
     }
 
     // MouseMotionListener
@@ -249,7 +252,15 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         int x = e.getX(), y = e.getY();
         EventModel em = EventModel.getEventModelInstance();
         em.savePosition(new Position(x/tile_size,y/tile_size));
-        repaint();
+        //repaint();
+    }
+
+    class FrameListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            repaint();
+        }
     }
 
 }
