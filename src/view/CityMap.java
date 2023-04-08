@@ -1,10 +1,7 @@
 package view;
 
 import jdk.jfr.Event;
-import model.Building;
-import model.CellItem;
-import model.City;
-import model.Position;
+import model.*;
 import resource.ResourceLoader;
 import view.component.EventModel;
 
@@ -38,6 +35,8 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             entry(CellItem.D_CAR, ResourceLoader.loadImage("resource/down-car.png"))
             // you can add many graphic as you want
     );
+
+    private Animator anim = new Animator();
 
     public CityMap(JFrame frame) throws IOException {
         mainFrame = frame;
@@ -101,10 +100,13 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             gr.drawImage(graphics.get(ct), p.x*tile_size, p.y*tile_size,ct.tiles*tile_size , ct.tiles*tile_size , null);
         }
 
+        anim.Animate(gr);
+
         if (!EventModel.isGenuinelyFree()) return;
 
         // implement vehicle rendering // row
         renderVehicles(gr);
+
 
     }
 
@@ -179,6 +181,16 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
     }
     /*************************************** Vehicles Ends ****************************************/
 
+    void initDisaster(){
+        Disaster d = city.spawnDisaster();
+        Random r = new Random();
+        //Position start = new Position(r.nextInt(getWidth()),r.nextInt(getHeight()));
+        Position start = new Position(40,0);
+        List<Building> bs = city.getBuildingList();
+        int ind = r.nextInt(bs.size());
+        anim.SetUp(d,start,bs.get(ind).topLeft());
+    }
+
 
     // MouseListener
     @Override
@@ -197,6 +209,8 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
                 city.constructBuilding(em.getPosition(),em.getCellItem()); break;
             case DEL_OPT:
                 city.demolish(em.getPosition()); break;
+            case DISASTER:
+                initDisaster(); break;
             default:
                 break;
         }

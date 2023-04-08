@@ -6,6 +6,7 @@ import java.sql.Array;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class City {
@@ -105,6 +106,12 @@ public class City {
         }
         buildings.remove(ind);
         System.out.println(buildings.size());
+    }
+
+    public Disaster spawnDisaster(){
+        Random r = new Random();
+        int i = r.nextInt(1);
+        return Disaster.values()[i];
     }
 
     public CellItem getCellItem(int row, int col) { return cells[row][col]; }
