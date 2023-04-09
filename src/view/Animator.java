@@ -4,12 +4,9 @@ import model.Disaster;
 import model.Position;
 import resource.ResourceLoader;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.lang.Math;
@@ -19,24 +16,32 @@ public class Animator {
     private Position end;
     private String mainPath = "resource/sprites/";
     private Map<String,Image> sprites = new HashMap<>();
-    //private String[] keys = new String[]{ "Stand","Move1","Move2","Prep","Attack" };
-    private String[] keys = new String[]{"Move1.png","Move2.png"};
-    private boolean isAnimating = false;
-    private int counter = 0, minDistance = 2;
+    private String[] keys = new String[]{
+     //"Idle",
+     "Spawn1","Spawn2","Spawn3","Spawn4","Spawn5",
+     "Move1","Move2","Move3",
+     "Prep1","Prep2","Prep3",
+     "Attack1","Attack2","Attack3" };
+
+    private boolean isAnimating = false, canInterrupt = true;
+    private int counter = 0, minDistance = 1, step = 0, imgIndex = 1;
     private int dirx,diry;
-    double speedx,speedy;
-    double drawx,drawy;
-    public void SetUp(Disaster d, Position end){
+    private double speedx,speedy;
+    private double drawx,drawy;
+    private int FPS = 45;
+    private AnimState state = AnimState.SPAWN;
+
+    public void SetUp(Disaster d, Position endP){
         try{
             disaster = d;
             LoadSprites(disaster);
-            SetDirection(end);
-            SetVelocity(end);
-            drawx = 13*30;
+            SetDirection(endP);
+            SetVelocity(new Position(14,10),endP);
+            drawx = 14*30;
             drawy = 8*30;
-            this.end = new Position(end.x*30,end.y*30);
+            endP.x--; endP.y-=2;
+            this.end = new Position(endP.x*30,endP.y*30);
             isAnimating = true;
-
         }catch (Exception e){
             System.out.println(e.getLocalizedMessage());
         }
@@ -45,7 +50,8 @@ public class Animator {
     private void LoadSprites(Disaster d) throws IOException {
         //sprites.clear();
         for(int i=0; i<keys.length; i++){
-            Image img = ResourceLoader.loadImage(mainPath+d.name()+"/"+keys[i]);
+            //System.out.println(mainPath+d.name()+"/"+keys[i]);
+            Image img = ResourceLoader.loadImage(mainPath+d.name()+"/"+keys[i]+".png");
             sprites.put(keys[i],img);
         }
     }
@@ -59,38 +65,167 @@ public class Animator {
         diry = end.y < midy ? -1 : 1;
     }
 
-    void SetVelocity(Position end){
+    void SetVelocity(Position start,Position end){
 
-        double multiplier = Math.abs(13 - end.x) / disaster.speed;
-        speedy = Math.abs( 8 - end.y) / multiplier;
+        double multiplier = Math.abs(start.x - end.x) / disaster.speed;
+        speedy = Math.abs(start.y - end.y) / multiplier;
         speedx = disaster.speed;
-
     }
 
     public void Animate(Graphics2D g){
-        if(!isAnimating) return;
-        counter++;
-        int i = 0;
-        if(counter < 30){
-            i = 0;
+        if(!isAnimating) {
+            //g.clearRect(0,0,23*30,34*30);
+            return;
         }
-        else if(counter < 60){
-            i = 1;
-        }
-        else{ counter = 0; }
-        Image img = sprites.get( keys[i] );
 
-        double dist = Math.sqrt( Math.pow(drawx-end.x,2) + Math.pow(drawy-end.y,2) );
-        if(dist <= minDistance * 30){
-            isAnimating = false;
-            mainPath = "resource/sprites/";
+        // Spawn:2, Move:Until Target, Prep:2, Attack:2
+        ChangeState();
+
+        switch (this.state){
+
+            case SPAWN:
+                SpawnAnim(g); break;
+            //case IDLE:
+            //    ShowText(g); break;
+            case MOVE:
+                MoveAnim(g); break;
+            //case PREP:
+            //    PrepAnim(g); break;
+            case ATTACK:
+                //System.out.println("Attacking "+counter+" "+step);
+                AttackAnim(g); break;
+
         }
+
+
+
+
+    }
+
+    void ChangeState(){
+
+
+        if(!canInterrupt){
+            //System.out.println("Calc state is "+this.state);
+            if(this.state == AnimState.MOVE){
+                double dist = Math.sqrt( Math.pow(drawx-end.x,2) + Math.pow(drawy-end.y,2) );
+                //System.out.println(dist);
+                if(dist <= minDistance * 30){
+                    //this.state  = AnimState.PREP;
+                    this.state = AnimState.ATTACK;
+                    step = 0;
+                    imgIndex = 1;
+                    canInterrupt = true;
+                    //SetVelocity(new Position((int)drawx,(int)drawy),end);
+                }
+            }
+//            else if(this.state == AnimState.PREP){
+//                minDistance = 1;
+//                double dist = Math.sqrt( Math.pow(drawx-end.x,2) + Math.pow(drawy-end.y,2) );
+//                if(dist <= minDistance * 30){
+//                    canInterrupt = true;
+//                    this.state  = AnimState.ATTACK;
+//                    step = 0;
+//                    imgIndex = 1;
+//                }
+//
+//            }
+            return;
+        }
+
+
+        counter++;
+        if(counter/FPS >= 2){
+            System.out.println(this.state.name());
+            if(this.state == AnimState.ATTACK){
+
+                isAnimating = false;
+                System.out.println("Stopped "+isAnimating);
+                return;
+            }
+            this.state  = AnimState.values()[this.state.ordinal()+1];
+            if(this.state == AnimState.MOVE){
+                canInterrupt = false;
+            }
+            counter = 0;
+            step = 0;
+            imgIndex = 1;
+        }
+
+    }
+
+    void SpawnAnim(Graphics2D g){
+        step++;
+        if(step > (2 * FPS) / 5){
+            if(imgIndex < 5 )
+                imgIndex = ( imgIndex+1 ) % 6;
+            step = 0;
+        }
+        String key = "Spawn" + imgIndex;
+        Image img = sprites.get(key);
+        if(img == null) return;
+        g.drawImage(img,AffineTransform.getTranslateInstance(drawx-60,drawy-90),null);
+    }
+
+    void MoveAnim(Graphics2D g){
+
+        step++;
+        if(step > (2 * FPS) / 3){
+            imgIndex = ( imgIndex+1 ) % 4;
+            imgIndex++;
+            step = 0;
+        }
+        String key = "Move" + imgIndex;
+        Image img = sprites.get( key );
 
         drawx = drawx + (speedx * dirx);
         drawy = drawy + (speedy * diry);
-
+        if(img == null) {
+            //System.out.println("Null "+imgIndex);
+            return;
+        }
         g.drawImage(img,AffineTransform.getTranslateInstance(drawx,drawy),null);
+        //AffineTransform t = new AffineTransform(1.5,3.0,0,0,drawx,drawy);
+        //g.drawImage(img,t,null);
+    }
+
+    void PrepAnim(Graphics2D g){
+        step++;
+        if(step > (2 * FPS) / 3){
+            imgIndex = ( imgIndex+1 ) % 4 ;
+            imgIndex++;
+            step = 0;
+        }
+        String key = "Prep" + imgIndex;
+        Image img = sprites.get( key );
+
+        drawx = drawx + (speedx * dirx);
+        drawy = drawy + (speedy * diry);
+        if(img == null) return;
+        g.drawImage(img,AffineTransform.getTranslateInstance(drawx,drawy),null);
+        //AffineTransform t = new AffineTransform(1.5,3.0,0,0,drawx,drawy);
+        //g.drawImage(img,t,null);
+    }
+
+    void AttackAnim(Graphics2D g){
+        step++;
+        if(step >= FPS ){
+            if(imgIndex < 3)
+                imgIndex++;
+        }
+        String key = "Attack"+imgIndex;
+        Image img = sprites.get(key);
+        //AffineTransform t = new AffineTransform(1.5,3.0,0,0,drawx,drawy);
+        if(img == null) return;
+        g.drawImage(img,AffineTransform.getTranslateInstance(drawx,drawy),null);
+        //g.drawImage(img,t,null);
     }
 
     public boolean isAnimating() { return isAnimating; }
+}
+
+enum AnimState {
+    SPAWN,MOVE,
+    //PREP,
+    ATTACK
 }
