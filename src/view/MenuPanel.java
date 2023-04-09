@@ -37,7 +37,7 @@ public class MenuPanel extends JPanel {
             } while ((gameName.length() == 0));
 
             if (gameName.length() > 0) {
-                frame.instantiateGame("949351d9-4f90-44b3-9b91-c30c1e6c9602",gameName);
+                frame.instantiateGame("",gameName);
                 this.frame.hideMenuPage();
                 this.frame.showMapPage();
             }

@@ -57,11 +57,11 @@ public class City {
 
         // Building Object Creation
         ArrayList<Position> locations = new ArrayList<>();
-        locations.add(p);
+        locations.add(new Position(p.y,p.x));
         if(radius == 1){ // 2 tile building
-            locations.add(new Position(p.x+1,p.y));
-            locations.add(new Position(p.x,p.y+1));
-            locations.add(new Position(p.x+1,p.y+1));
+            locations.add(new Position(p.y+1,p.x));
+            locations.add(new Position(p.y,p.x+1));
+            locations.add(new Position(p.y+1,p.x+1));
         }
 
         buildings.add(new Building(locations));
@@ -93,18 +93,20 @@ public class City {
     }
 
     public void deleteBuilding(Position p){
+        Position d = new Position(p.y,p.x);
         int ind = -1;
         for(int i=0; i<buildings.size(); i++){
-            if(buildings.get(i).location.contains(p)){
+            if(buildings.get(i).location.contains(d)){
                 ind = i;
                 break;
             }
         }
         if(ind == -1) return;
         for(Position p1 : buildings.get(ind).location){
-            cells[p1.y][p1.x] = CellItem.GENERAL;
+            cells[p1.x][p1.y] = CellItem.GENERAL;
         }
         buildings.remove(ind);
+
     }
 
     public Disaster spawnDisaster(){

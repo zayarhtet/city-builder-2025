@@ -32,6 +32,8 @@ public class Animator {
     private AnimState state = AnimState.SPAWN;
 
     public void SetUp(Disaster d, Position endP){
+        endP = new Position(endP.y,endP.x);
+
         try{
             disaster = d;
             LoadSprites(disaster);
@@ -42,6 +44,9 @@ public class Animator {
             endP.x--; endP.y-=2;
             this.end = new Position(endP.x*30,endP.y*30);
             isAnimating = true;
+            counter = step = 0;
+            imgIndex = 1;
+            this.state = AnimState.SPAWN;
         }catch (Exception e){
             System.out.println(e.getLocalizedMessage());
         }
@@ -58,7 +63,7 @@ public class Animator {
 
     void SetDirection(Position end){
         // row 22 col 33
-        int midx = 8,midy = 13;
+        int midx = 13,midy = 8;
 
         // Start point + offset calculation
         dirx = end.x < midx ? -1 : 1;
@@ -94,7 +99,8 @@ public class Animator {
             case ATTACK:
                 //System.out.println("Attacking "+counter+" "+step);
                 AttackAnim(g); break;
-
+            default:
+                break;
         }
 
 
@@ -138,9 +144,7 @@ public class Animator {
         if(counter/FPS >= 2){
             System.out.println(this.state.name());
             if(this.state == AnimState.ATTACK){
-
                 isAnimating = false;
-                System.out.println("Stopped "+isAnimating);
                 return;
             }
             this.state  = AnimState.values()[this.state.ordinal()+1];

@@ -88,10 +88,14 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         while(iter.hasNext()) {
             // draw building
             Position p = iter.next().topLeft();
-            CellItem c = city.getCellItem(p.y,p.x);
+            if(p.x < 0 || p.y <0) break;
+            CellItem c = city.getCellItem(p.x,p.y);
+            //System.out.println(c);
             Image img = graphics.get(c);
-            if(img == null) continue;
-            gr.drawImage(img, p.x*tile_size, (p.y+c.tiles)*tile_size , c.tiles*tile_size, -c.tiles*tile_size, null );
+            if(img == null) {
+                continue;
+            }
+            gr.drawImage(img, p.y*tile_size, p.x*tile_size , c.tiles*tile_size, c.tiles*tile_size, null );
         }
 
         anim.Animate(gr);
@@ -189,7 +193,9 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         Random r = new Random();
         List<Building> bs = city.getBuildingList();
         int ind = r.nextInt(bs.size());
-        anim.SetUp(d,bs.get(ind).topLeft());
+        Position ds = bs.get(ind).topLeft();
+        System.out.println("Going to "+ds.x+" "+ds.y);
+        anim.SetUp(d,ds);
     }
 
 
