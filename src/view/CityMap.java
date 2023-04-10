@@ -19,7 +19,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
     private JFrame                  mainFrame;
     private int                     tile_size = 30;
     private int                     speed = 1;
-    private int                     vehicleFrameRate = 3;
+    private int                     vehicleFrameRate = 2;
     private int [][]                vehiclesRow;
     private int [][]                vehiclesCol;
     private City                    city;
@@ -194,7 +194,6 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         List<Building> bs = city.getBuildingList();
         int ind = r.nextInt(bs.size());
         Position ds = bs.get(ind).topLeft();
-        System.out.println("Going to "+ds.x+" "+ds.y);
         anim.SetUp(d,ds);
     }
 

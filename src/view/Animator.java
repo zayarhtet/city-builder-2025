@@ -55,7 +55,6 @@ public class Animator {
     private void LoadSprites(Disaster d) throws IOException {
         //sprites.clear();
         for(int i=0; i<keys.length; i++){
-            //System.out.println(mainPath+d.name()+"/"+keys[i]);
             Image img = ResourceLoader.loadImage(mainPath+d.name()+"/"+keys[i]+".png");
             sprites.put(keys[i],img);
         }
@@ -68,6 +67,13 @@ public class Animator {
         // Start point + offset calculation
         dirx = end.x < midx ? -1 : 1;
         diry = end.y < midy ? -1 : 1;
+
+        if(end.x == midx){
+            dirx = 0;
+        }
+        if(end.y == midy){
+            diry = 0;
+        }
     }
 
     void SetVelocity(Position start,Position end){
@@ -79,25 +85,27 @@ public class Animator {
 
     public void Animate(Graphics2D g){
         if(!isAnimating) {
-            //g.clearRect(0,0,23*30,34*30);
             return;
         }
 
-        // Spawn:2, Move:Until Target, Prep:2, Attack:2
+        if(drawx < -30 || drawx > 35*30){
+            isAnimating = false;
+            return;
+        }
+        if(drawy< -30 || drawy > 25*30){
+            isAnimating = false;
+            return;
+        }
+
         ChangeState();
 
         switch (this.state){
 
             case SPAWN:
                 SpawnAnim(g); break;
-            //case IDLE:
-            //    ShowText(g); break;
             case MOVE:
                 MoveAnim(g); break;
-            //case PREP:
-            //    PrepAnim(g); break;
             case ATTACK:
-                //System.out.println("Attacking "+counter+" "+step);
                 AttackAnim(g); break;
             default:
                 break;
@@ -112,37 +120,21 @@ public class Animator {
 
 
         if(!canInterrupt){
-            //System.out.println("Calc state is "+this.state);
             if(this.state == AnimState.MOVE){
                 double dist = Math.sqrt( Math.pow(drawx-end.x,2) + Math.pow(drawy-end.y,2) );
-                //System.out.println(dist);
                 if(dist <= minDistance * 30){
-                    //this.state  = AnimState.PREP;
                     this.state = AnimState.ATTACK;
                     step = 0;
                     imgIndex = 1;
                     canInterrupt = true;
-                    //SetVelocity(new Position((int)drawx,(int)drawy),end);
                 }
             }
-//            else if(this.state == AnimState.PREP){
-//                minDistance = 1;
-//                double dist = Math.sqrt( Math.pow(drawx-end.x,2) + Math.pow(drawy-end.y,2) );
-//                if(dist <= minDistance * 30){
-//                    canInterrupt = true;
-//                    this.state  = AnimState.ATTACK;
-//                    step = 0;
-//                    imgIndex = 1;
-//                }
-//
-//            }
             return;
         }
 
 
         counter++;
         if(counter/FPS >= 2){
-            System.out.println(this.state.name());
             if(this.state == AnimState.ATTACK){
                 isAnimating = false;
                 return;
@@ -184,13 +176,12 @@ public class Animator {
 
         drawx = drawx + (speedx * dirx);
         drawy = drawy + (speedy * diry);
-        if(img == null) {
-            //System.out.println("Null "+imgIndex);
+        if(dirx * diry == 0){
+            g.drawImage(img,(int)drawx,(int)drawy,null);
             return;
         }
+
         g.drawImage(img,AffineTransform.getTranslateInstance(drawx,drawy),null);
-        //AffineTransform t = new AffineTransform(1.5,3.0,0,0,drawx,drawy);
-        //g.drawImage(img,t,null);
     }
 
     void PrepAnim(Graphics2D g){
@@ -207,8 +198,6 @@ public class Animator {
         drawy = drawy + (speedy * diry);
         if(img == null) return;
         g.drawImage(img,AffineTransform.getTranslateInstance(drawx,drawy),null);
-        //AffineTransform t = new AffineTransform(1.5,3.0,0,0,drawx,drawy);
-        //g.drawImage(img,t,null);
     }
 
     void AttackAnim(Graphics2D g){
@@ -219,17 +208,13 @@ public class Animator {
         }
         String key = "Attack"+imgIndex;
         Image img = sprites.get(key);
-        //AffineTransform t = new AffineTransform(1.5,3.0,0,0,drawx,drawy);
         if(img == null) return;
         g.drawImage(img,AffineTransform.getTranslateInstance(drawx,drawy),null);
-        //g.drawImage(img,t,null);
     }
 
     public boolean isAnimating() { return isAnimating; }
 }
 
 enum AnimState {
-    SPAWN,MOVE,
-    //PREP,
-    ATTACK
+    SPAWN,MOVE, ATTACK
 }
