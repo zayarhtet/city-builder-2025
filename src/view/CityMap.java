@@ -33,7 +33,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             entry(CellItem.V_ROAD, ResourceLoader.loadImage("resource/v-road.png")),
             entry(CellItem.JUNCTION_ROAD, ResourceLoader.loadImage("resource/bot-right-road.png")),
             entry(CellItem.DEL_OPT, ResourceLoader.loadImage("resource/delete.png")),
-            entry(CellItem.POLICE_DEPARTMENT, ResourceLoader.loadImage("resource/pd-2.png")),
+            entry(CellItem.POLICE_DEPARTMENT, ResourceLoader.loadImage("resource/pd.png")),
             entry(CellItem.R_CAR, ResourceLoader.loadImage("resource/right-car.png")),
             entry(CellItem.D_CAR, ResourceLoader.loadImage("resource/down-car.png"))
             // you can add many graphic as you want
@@ -200,7 +200,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             default:
                 break;
         }
-
+        city.setModifiedDate();
 //        EventModel.DeleteInstance();
         initiateRandomVehicles(1);
         repaint();

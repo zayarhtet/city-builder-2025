@@ -1,10 +1,7 @@
 package view;
 
 import model.Game;
-import view.component.EventModel;
-import view.component.ExitConfirmationDialog;
-import view.component.InGameButtonPanel;
-import view.component.StatisticPanel;
+import view.component.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +14,7 @@ import java.net.URL;
 
 public class MainWindow extends JFrame {
     private MenuPanel   menu;
+    private LoadGamePanel loadGamePanel;
     private StatisticPanel      statisticPanel;
     private InGameButtonPanel   buttonPanel;
     private CityMap     map;
@@ -51,7 +49,7 @@ public class MainWindow extends JFrame {
 
         try { add(menu = new MenuPanel(this), BorderLayout.CENTER); } catch (IOException e) {}
 
-        this.statisticPanel = new StatisticPanel(this, THEME);
+        this.statisticPanel = new StatisticPanel(this);
         add(statisticPanel, BorderLayout.NORTH);
         statisticPanel.setVisible(false);
 
@@ -69,7 +67,15 @@ public class MainWindow extends JFrame {
     public void hideMenuPage() { menu.setVisible(false); }
     public void showMenuPage() { menu.setVisible(true); }
     public void hideMapPage() { map.setVisible(false); statisticPanel.setVisible(false); buttonPanel.setVisible(false); }
-    public void showMapPage() { map.setVisible(true); statisticPanel.setVisible(true); buttonPanel.setVisible(true);}
+    public void showMapPage() { map.setVisible(true); statisticPanel.setVisible(true); buttonPanel.setVisible(true); }
+    public void showLoadGamePage() { loadGamePanel.setVisible(true); }
+    public void hideLoadGamePage() { loadGamePanel.setVisible(false); }
+    public void instantiateLoadGame() {
+        if (loadGamePanel == null) {
+            add(loadGamePanel = new LoadGamePanel(this.game.getAllCities(),  this));
+        }
+        loadGamePanel.syncTable();
+    }
     public void instantiateGame(String id, String username) {
         if (map == null) {
             try { add(map = new CityMap(this), BorderLayout.CENTER); } catch (IOException e) {}

@@ -64,7 +64,7 @@ public class InputDialog extends JDialog {
         textField = new JTextField();
         textField.setForeground(MainWindow.THEME);
         textField.setFont(new Font("Courier", Font.BOLD, 16));
-        textField.setPreferredSize(new Dimension(400, 30));
+        textField.setPreferredSize(new Dimension(300, 30));
         textField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
         // Buttons

@@ -22,7 +22,7 @@ public class InGameButtonPanel extends JPanel {
         JButton botRightRoadBtn = new InGameButton("resource/bot-right-road.png", CellItem.JUNCTION_ROAD);
         add(botRightRoadBtn);
 
-        JButton policeDepartmentBtn = new InGameButton("resource/ps.png",CellItem.POLICE_DEPARTMENT);
+        JButton policeDepartmentBtn = new InGameButton("resource/pd-2.png",CellItem.POLICE_DEPARTMENT);
         add(policeDepartmentBtn);
 
         JButton deleteBtn = new InGameButton("resource/delete.png",CellItem.DEL_OPT);

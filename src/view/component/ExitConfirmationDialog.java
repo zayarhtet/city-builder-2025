@@ -46,14 +46,6 @@ public class ExitConfirmationDialog extends JDialog implements ActionListener {
         buttonPanel.setLayout(new BorderLayout());
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Create OK button
-        JButton okButton = new JButton("Yes");
-        okButton.addActionListener(this);
-        okButton.setPreferredSize(new Dimension(100, 30));
-        okButton.setForeground(Color.BLACK);
-        okButton.setBackground(new Color(135, 225, 124));
-        okButton.setBorder(BorderFactory.createLineBorder(new Color(0, 130, 0)));
-        buttonPanel.add(okButton, BorderLayout.WEST);
 
         // Create cancel button
         JButton cancelButton = new JButton("No");
@@ -62,11 +54,21 @@ public class ExitConfirmationDialog extends JDialog implements ActionListener {
         cancelButton.setForeground(Color.WHITE);
         cancelButton.setBackground(new Color(225, 124, 135));
         cancelButton.setBorder(BorderFactory.createLineBorder(new Color(130, 0, 0)));
-        buttonPanel.add(cancelButton, BorderLayout.EAST);
+        buttonPanel.add(cancelButton, BorderLayout.WEST);
+
+        // Create OK button
+        JButton okButton = new JButton("Yes");
+        okButton.addActionListener(this);
+        okButton.setPreferredSize(new Dimension(100, 30));
+        okButton.setForeground(Color.BLACK);
+        okButton.setBackground(new Color(135, 225, 124));
+        okButton.setBorder(BorderFactory.createLineBorder(new Color(0, 130, 0)));
+        buttonPanel.add(okButton, BorderLayout.EAST);
 
         // Pack and center dialog
         pack();
         setLocationRelativeTo(null);
+        setResizable(false);
         setVisible(true);
     }
 

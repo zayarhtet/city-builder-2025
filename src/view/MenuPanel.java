@@ -2,6 +2,7 @@ package view;
 
 import resource.ResourceLoader;
 import view.component.InputDialog;
+import view.LoadGamePanel;
 import view.component.MenuButton;
 
 import javax.swing.*;
@@ -41,7 +42,14 @@ public class MenuPanel extends JPanel {
         
         menuTextPanel.add(newGameButton);
         menuTextPanel.add(Box.createRigidArea(new Dimension(0, GAP)));
-        menuTextPanel.add(new MenuButton("Load Game"));
+
+        JButton loadGameButton = new MenuButton("Load Game");
+        loadGameButton.addActionListener(e -> {
+            this.frame.instantiateLoadGame();
+            this.frame.hideMenuPage();
+            this.frame.showLoadGamePage();
+        });
+        menuTextPanel.add(loadGameButton);
         menuTextPanel.add(Box.createRigidArea(new Dimension(0, GAP)));
         menuTextPanel.add(new MenuButton("Quit Game"));
 
