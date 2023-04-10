@@ -31,7 +31,12 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             entry(CellItem.DEL_OPT, ResourceLoader.loadImage("resource/delete.png")),
             entry(CellItem.POLICE_DEPARTMENT, ResourceLoader.loadImage("resource/pd.png")),
             entry(CellItem.R_CAR, ResourceLoader.loadImage("resource/right-car.png")),
-            entry(CellItem.D_CAR, ResourceLoader.loadImage("resource/down-car.png"))
+            entry(CellItem.D_CAR, ResourceLoader.loadImage("resource/down-car.png")),
+//            entry(CellItem.POWER_PLANT, ResourceLoader.loadImage("resource/powerplant-21.png")),
+            entry(CellItem.POWER_PLANT, ResourceLoader.loadImage("resource/pp.png")),
+            entry(CellItem.STADIUM, ResourceLoader.loadImage("resource/stadium-2.png")),
+            entry(CellItem.RESIDENTIAL, ResourceLoader.loadImage("resource/residential-2.png")),
+            entry(CellItem.SERVICE_INDUSTRIAL, ResourceLoader.loadImage("resource/factory-2.png"))
             // you can add many graphic as you want
     );
 
@@ -68,6 +73,10 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
                 switch (ci) {
                     case GENERAL:
                         img = graphics.get(CellItem.GENERAL); break;
+                    case RESIDENTIAL:
+                        img = graphics.get(CellItem.RESIDENTIAL); break;
+                    case SERVICE_INDUSTRIAL:
+                        img = graphics.get(CellItem.SERVICE_INDUSTRIAL); break;
                     case H_ROAD:
                         img = graphics.get(CellItem.H_ROAD); break;
                     case V_ROAD:
@@ -86,11 +95,9 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         List<Building> buildings = city.getBuildingList();
         Iterator<Building> iter = buildings.iterator();
         while(iter.hasNext()) {
-            // draw building
             Position p = iter.next().topLeft();
             if(p.x < 0 || p.y <0) break;
             CellItem c = city.getCellItem(p.x,p.y);
-            //System.out.println(c);
             Image img = graphics.get(c);
             if(img == null) {
                 continue;
@@ -103,7 +110,6 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         if (!EventModel.isFree()) {
             EventModel em = EventModel.getEventModelInstance();
             CellItem ct = em.getCellItem(); Position p = em.getPosition();
-            // After implementing isOccupied() method, then comment out this.
             if (p == null) return;
             if (city.isOccupied(p)) return;
             gr.drawImage(graphics.get(ct), p.x*tile_size, p.y*tile_size,ct.tiles*tile_size , ct.tiles*tile_size , null);
@@ -206,12 +212,16 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         // check if the target is occupied
         // check what needs to be built with em.getCellItem() and with Switch case and call respective methods from city.
         switch (em.getCellItem()){
+            case RESIDENTIAL:
+            case SERVICE_INDUSTRIAL:
+                city.assignZone(em.getPosition(), em.getCellItem()); break;
             case V_ROAD:
             case JUNCTION_ROAD:
             case H_ROAD:
                 city.buildRoad(em.getPosition(), em.getCellItem()); break;
             case STADIUM:
             case POLICE_DEPARTMENT:
+            case POWER_PLANT:
                 city.constructBuilding(em.getPosition(),em.getCellItem()); break;
             case DEL_OPT:
                 city.demolish(em.getPosition()); break;
@@ -223,9 +233,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
                 break;
         }
         city.setModifiedDate();
-//        EventModel.DeleteInstance();
         initiateRandomVehicles(1);
-        //repaint();
     }
 
     @Override

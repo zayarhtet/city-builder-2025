@@ -44,9 +44,15 @@ public class City {
         // Create a Road class and handle the fee and maintenance
     }
 
+    public void assignZone(Position p, CellItem ct) {
+        if (isOccupied(p)) return;
+        cells[p.y][p.x] = ct;
+//        Zone zone = new Zone();
+//        zones.add(zone);
+    }
+
     public void constructBuilding(Position p,CellItem c){
         int radius = c.tiles-1;
-        //System.out.println(p.y+" "+p.x);
         int offset = 2; // offset for InGameButtonPanel
         boolean isInBound = p.x < col-offset-1 && p.y < row-offset-1;
         if(!isInBound) return;
@@ -76,10 +82,14 @@ public class City {
     public void demolish(Position p){
         CellItem ct = cells[p.y][p.x];
         switch (ct){
+            case RESIDENTIAL:
+            case SERVICE_INDUSTRIAL:
+                deleteZone(p); break;
             case H_ROAD:
             case V_ROAD:
             case JUNCTION_ROAD:
                 deleteRoad(p); break;
+            case POWER_PLANT:
             case POLICE_DEPARTMENT:
             case STADIUM:
                 deleteBuilding(p); break;
@@ -88,6 +98,10 @@ public class City {
                 break;
         }
         setModifiedDate();
+    }
+
+    public void deleteZone(Position p) {
+        cells[p.y][p.x] = CellItem.GENERAL;
     }
 
     public void deleteRoad(Position p){

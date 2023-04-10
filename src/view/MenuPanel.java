@@ -2,7 +2,6 @@ package view;
 
 import resource.ResourceLoader;
 import view.component.InputDialog;
-import view.LoadGamePanel;
 import view.component.MenuButton;
 
 import javax.swing.*;
