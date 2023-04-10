@@ -23,7 +23,6 @@ public class MainWindow extends JFrame {
     public static Color       THEME       = new Color(126,121,224,255);
     public static Color BG_COLOR           = new Color(225, 214, 124);
     private Game        game;
-    private Timer       timer;
     public MainWindow() {
         setTitle("CityBuilder 2025");
         setSize(width, height);
@@ -83,14 +82,5 @@ public class MainWindow extends JFrame {
         map.setCity(game.loadCity(id, username));
 
         map.initiateRandomVehicles(1);
-        timer = new Timer(50, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!EventModel.isGenuinelyFree()) return;
-
-                map.repaint();
-            }
-        });
-        timer.start();
     }
 }

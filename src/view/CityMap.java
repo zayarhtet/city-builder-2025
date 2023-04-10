@@ -19,7 +19,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
     private JFrame                  mainFrame;
     private int                     tile_size = 30;
     private int                     speed = 1;
-    private int                     vehicleFrameRate = 3;
+    private int                     vehicleFrameRate = 2;
     private int [][]                vehiclesRow;
     private int [][]                vehiclesCol;
     private City                    city;
