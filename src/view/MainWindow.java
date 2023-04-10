@@ -2,6 +2,7 @@ package view;
 
 import model.Game;
 import view.component.EventModel;
+import view.component.ExitConfirmationDialog;
 import view.component.InGameButtonPanel;
 import view.component.StatisticPanel;
 
@@ -21,18 +22,23 @@ public class MainWindow extends JFrame {
     private CityMap     map;
     private int         width       = 1000,
                         height      = 698;
-    private Color       theme       = new Color(126,121,224,255);
+    public static Color       THEME       = new Color(126,121,224,255);
+    public static Color BG_COLOR           = new Color(225, 214, 124);
     private Game        game;
     private Timer       timer;
     public MainWindow() {
         setTitle("CityBuilder 2025");
         setSize(width, height);
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                game.saveCities();
-                System.exit(0);
+                ExitConfirmationDialog dialog = new ExitConfirmationDialog();
+                if (dialog.isConfirmed()) {
+                    game.saveCities();
+                    dispose();
+                    System.exit(0);
+                }
             }
         });
         URL url = MainWindow.class.getClassLoader().getResource("resource/player.png");
@@ -45,11 +51,11 @@ public class MainWindow extends JFrame {
 
         try { add(menu = new MenuPanel(this), BorderLayout.CENTER); } catch (IOException e) {}
 
-        this.statisticPanel = new StatisticPanel(this, theme);
+        this.statisticPanel = new StatisticPanel(this, THEME);
         add(statisticPanel, BorderLayout.NORTH);
         statisticPanel.setVisible(false);
 
-        this.buttonPanel = new InGameButtonPanel(this, theme);
+        this.buttonPanel = new InGameButtonPanel(this, THEME);
         add(buttonPanel, BorderLayout.EAST);
         buttonPanel.setVisible(false);
 
