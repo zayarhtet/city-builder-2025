@@ -1,6 +1,8 @@
 package view;
 
 import resource.ResourceLoader;
+import view.component.InputDialog;
+import view.LoadGamePanel;
 import view.component.MenuButton;
 
 import javax.swing.*;
@@ -28,14 +30,9 @@ public class MenuPanel extends JPanel {
             //TODO dialog box here, should The variable(gameName) be extended?
             //TODO should it be wraped in try catch?
             String gameName = "";
-            do {
-                gameName = (String) JOptionPane.showInputDialog("New game's name");
-                if (gameName == null) {
-                    gameName = "";
-                    break;
-                }
-            } while ((gameName.length() == 0));
 
+            InputDialog idialog = new InputDialog();
+            gameName = idialog.getInput();
             if (gameName.length() > 0) {
                 frame.instantiateGame("",gameName);
                 this.frame.hideMenuPage();
@@ -45,7 +42,14 @@ public class MenuPanel extends JPanel {
         
         menuTextPanel.add(newGameButton);
         menuTextPanel.add(Box.createRigidArea(new Dimension(0, GAP)));
-        menuTextPanel.add(new MenuButton("Load Game"));
+
+        JButton loadGameButton = new MenuButton("Load Game");
+        loadGameButton.addActionListener(e -> {
+            this.frame.instantiateLoadGame();
+            this.frame.hideMenuPage();
+            this.frame.showLoadGamePage();
+        });
+        menuTextPanel.add(loadGameButton);
         menuTextPanel.add(Box.createRigidArea(new Dimension(0, GAP)));
         menuTextPanel.add(new MenuButton("Quit Game"));
 

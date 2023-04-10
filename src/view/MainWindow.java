@@ -1,9 +1,7 @@
 package view;
 
 import model.Game;
-import view.component.EventModel;
-import view.component.InGameButtonPanel;
-import view.component.StatisticPanel;
+import view.component.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,23 +14,29 @@ import java.net.URL;
 
 public class MainWindow extends JFrame {
     private MenuPanel   menu;
+    private LoadGamePanel loadGamePanel;
     private StatisticPanel      statisticPanel;
     private InGameButtonPanel   buttonPanel;
     private CityMap     map;
     private int         width       = 1000,
                         height      = 698;
-    private Color       theme       = new Color(126,121,224,255);
+    public static Color       THEME       = new Color(126,121,224,255);
+    public static Color BG_COLOR           = new Color(225, 214, 124);
     private Game        game;
     private Timer       timer;
     public MainWindow() {
         setTitle("CityBuilder 2025");
         setSize(width, height);
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                game.saveCities();
-                System.exit(0);
+                ExitConfirmationDialog dialog = new ExitConfirmationDialog();
+                if (dialog.isConfirmed()) {
+                    game.saveCities();
+                    dispose();
+                    System.exit(0);
+                }
             }
         });
         URL url = MainWindow.class.getClassLoader().getResource("resource/player.png");
@@ -45,11 +49,11 @@ public class MainWindow extends JFrame {
 
         try { add(menu = new MenuPanel(this), BorderLayout.CENTER); } catch (IOException e) {}
 
-        this.statisticPanel = new StatisticPanel(this, theme);
+        this.statisticPanel = new StatisticPanel(this);
         add(statisticPanel, BorderLayout.NORTH);
         statisticPanel.setVisible(false);
 
-        this.buttonPanel = new InGameButtonPanel(this, theme);
+        this.buttonPanel = new InGameButtonPanel(this, THEME);
         add(buttonPanel, BorderLayout.EAST);
         buttonPanel.setVisible(false);
 
@@ -63,7 +67,15 @@ public class MainWindow extends JFrame {
     public void hideMenuPage() { menu.setVisible(false); }
     public void showMenuPage() { menu.setVisible(true); }
     public void hideMapPage() { map.setVisible(false); statisticPanel.setVisible(false); buttonPanel.setVisible(false); }
-    public void showMapPage() { map.setVisible(true); statisticPanel.setVisible(true); buttonPanel.setVisible(true);}
+    public void showMapPage() { map.setVisible(true); statisticPanel.setVisible(true); buttonPanel.setVisible(true); }
+    public void showLoadGamePage() { loadGamePanel.setVisible(true); }
+    public void hideLoadGamePage() { loadGamePanel.setVisible(false); }
+    public void instantiateLoadGame() {
+        if (loadGamePanel == null) {
+            add(loadGamePanel = new LoadGamePanel(this.game.getAllCities(),  this));
+        }
+        loadGamePanel.syncTable();
+    }
     public void instantiateGame(String id, String username) {
         if (map == null) {
             try { add(map = new CityMap(this), BorderLayout.CENTER); } catch (IOException e) {}

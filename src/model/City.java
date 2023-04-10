@@ -4,7 +4,9 @@ import persistence.Database;
 
 import java.sql.Array;
 import java.sql.DatabaseMetaData;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -12,6 +14,8 @@ import java.util.UUID;
 public class City {
     private final String    id;
     private String          username;
+    private final String    createdDate;
+    private String          lastModifiedDate;
     private final int       row = 22,
                             col = 33;
     private CellItem [][]   cells;
@@ -23,6 +27,8 @@ public class City {
     public City(String username) {
         this.id = UUID.randomUUID().toString();
         this.username = username;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        this.lastModifiedDate = this.createdDate = formatter.format(new Date());
 
         cells = new CellItem[row][col];
         for (int i = 0; i < row; i++) {
@@ -81,6 +87,7 @@ public class City {
             default:
                 break;
         }
+        setModifiedDate();
     }
 
     public void deleteRoad(Position p){
@@ -122,6 +129,13 @@ public class City {
     public List<Building> getBuildingList() { return new ArrayList<>(buildings); }
     public boolean isOccupied(Position p) { return cells[p.y][p.x] != CellItem.GENERAL; }
     public String getId() { return this.id; }
+    public String getUsername() { return this.username; }
+    public String getCreatedDate() { return this.createdDate; }
+    public String getModifiedDate() { return this.lastModifiedDate; }
+    public void setModifiedDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        this.lastModifiedDate = formatter.format(new Date());
+    }
 
     public boolean isRoad(int row, int col) {
         if (row >= this.row || col >= this.col) return false;
