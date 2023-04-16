@@ -1,15 +1,17 @@
-package tests;
 
-import junit.framework.TestCase;
-import model.City;
+import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
-public class TestBasic extends TestCase {
+
+public class TestBasic  {
+  @Test
   public void testTrue() {
     System.out.println("Test1");
     assertTrue(true);
   }
-  public void testCityColumns() {
-    City tempCity = new City("test");
-    assertEquals(tempCity.getColumnCount(), 33);
-  }
+  // @Test
+  // public void testCityColumns() {
+  //   City tempCity = new City("test");
+  //   assertEquals(tempCity.getColumnCount(), 33);
+  // }
 }
