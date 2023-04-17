@@ -1,9 +1,11 @@
 package model;
 
-import persistence.Database;
+import model.budget.Bank;
+import model.building.Building;
+import model.zone.ResidentialZone;
+import model.zone.Zone;
+import resource.Constant;
 
-import java.sql.Array;
-import java.sql.DatabaseMetaData;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +20,7 @@ public class City {
     private String          lastModifiedDate;
     private final int       row = 22,
                             col = 33;
+    private Bank            bank;
     private CellItem [][]   cells;
     private List<Position>  roads = new ArrayList<>();
     private List<Building>  buildings = new ArrayList<> ();
@@ -36,19 +39,24 @@ public class City {
                 cells[i][j] = CellItem.GENERAL;
             }
         }
+        this.bank = new Bank();
+        Random rand = new Random();
+        assignZone(new Position(rand.nextInt(col), rand.nextInt(row)), CellItem.RESIDENTIAL);
+        assignZone(new Position(rand.nextInt(col), rand.nextInt(row)), CellItem.RESIDENTIAL);
     }
 
     public void buildRoad(Position p, CellItem ct) {
+        // implement transaction, the values are inside Constant class
         cells[p.y][p.x] = ct;
         roads.add(new Position(p));
-        // Create a Road class and handle the fee and maintenance
     }
 
     public void assignZone(Position p, CellItem ct) {
         if (isOccupied(p)) return;
+        // implement transaction, the price is inside Constant class.
         cells[p.y][p.x] = ct;
-//        Zone zone = new Zone();
-//        zones.add(zone);
+
+        // initiate zone according to ct
     }
 
     public void constructBuilding(Position p,CellItem c){
@@ -117,13 +125,14 @@ public class City {
         Position d = new Position(p.y,p.x);
         int ind = -1;
         for(int i=0; i<buildings.size(); i++){
-            if(buildings.get(i).location.contains(d)){
+            if(buildings.get(i).contains(d)){
                 ind = i;
                 break;
             }
         }
         if(ind == -1) return;
-        for(Position p1 : buildings.get(ind).location){
+        List<Position> bldgLocation = buildings.get(ind).getLocation();
+        for(Position p1 : bldgLocation){
             cells[p1.x][p1.y] = CellItem.GENERAL;
         }
         buildings.remove(ind);

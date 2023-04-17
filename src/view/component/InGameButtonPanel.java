@@ -25,7 +25,7 @@ public class InGameButtonPanel extends JPanel {
         JButton stadiumBtn = new InGameButton("resource/stadium.png",CellItem.STADIUM);
         add(stadiumBtn);
 
-        JButton ppBtn = new InGameButton("resource/powerplant-2.png",CellItem.POWER_PLANT);
+        JButton ppBtn = new InGameButton("resource/powerplant.png",CellItem.POWER_PLANT);
         add(ppBtn);
 
         JButton roadBtn = new InGameButton("resource/h-road.png", CellItem.H_ROAD);

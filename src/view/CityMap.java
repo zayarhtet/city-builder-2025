@@ -1,7 +1,7 @@
 package view;
 
-import jdk.jfr.Event;
 import model.*;
+import model.building.Building;
 import resource.ResourceLoader;
 import view.component.EventModel;
 
