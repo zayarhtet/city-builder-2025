@@ -1,0 +1,17 @@
+image: java:latest
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script: /usr/lib/jvm/java-8-openjdk-amd64/bin/javac -cp ./lib/junit-4.13.2.jar -d ./classes ./src/tests/TestBasic.java
+  artifacts:
+    paths:
+     - TestBasic.*
+
+
+test:
+  stage: test
+  script: /usr/lib/jvm/java-8-openjdk-amd64/bin/java -cp ./lib/junit-4.13.2.jar:./lib/hamcrest-core-1.3.jar:./classes:. org.junit.runner.JUnitCore TestBasic
