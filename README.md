@@ -1,29 +1,51 @@
 # Tasks to be done before April 30th
-
+### Please write the code with the passion and effort. Low quality code is not acceptable. Please use the same approach.
+### Please write the code neat and tidy and before committing, please check if there are unnecessary files. Always keep the project neat and tidy.
+### Create the new branches for these backend functionality.
 ## Backend
 - Implement `Transaction.java`
+
 - Initiate some constants inside Constant.java for reimbursement rate for demolishing.
+
 - Implement transaction inside `buildRoad(), assignZone(), constructBuilding() and other demolishMethods`.
+
 - When initiating zones, population has to be random, in case of ServiceIndustrial, the number of employee quota has to be random as well.
+
 - Complete `assignZone()` inside City.java
+
 - Implement `getTrasactionList()` inside City.java using Bank attribute.
+
 - Implement `getPopulation()` which will compute using `List<Zone>zones` (City.java).
+
 - Implement `getFreeWorkspace()` which will return the difference between number of employees (calculate it from `List<Zone>zones`) and population. (here if the result is negative, then no freeworkspace, so, zero, 0) (City.java).
+
 - Implement `getJoblessPopulation()` which will return the difference between number of employees and population, (here if the result is positive, then no jobless people, so zero:0) (City.java).
+
 - Implement `Building.java` and its respective children, Power Plant, Stadium, Police Department. Every building has its radius which will affect the satisfaction of the people. The radius can be constant for all buildings. (City.java)
+
 - Implement `getSatisfaction()` which will calculate based on the jobless population, electricity, stadium, police department. The simple algorithm is that first, get the satisfaction of each residence by iterating through all the residential zones and checking if there are police dept, power plant, stadium within the radius, if those exist, then do arithmetic calculation with jobless/employed population. Calculate overall satisfaction using basic arithmetic. (If you have a better idea, you can use it). (This function need very good performance) (City.java)
+
 - Implement `collectTax()` which will add the specific values to the bank obtained by calculating through employed population.
+
 - Implement `payPension()` which will subtract the specific values based on datetime and unemployed population. (do it yourself).
+
 - Implement `spendMaintenanceFee()` which will subtract the specific values calculated based on road, police department, etc.
+
 - Implement `getDateString() which will parse the `second:int` into 'DD-MM-YYYY HH:mm' string. (This function needs very good performance)
+
 - Implement `increaseTime(int) which will add it to the `second:int` attribute.
+
 - Implement the transmissionLine similar to Road.
 
 ## Frontend
 - Implement `TransactionPanel.java` which contains the table.
+
 - Connect it with the `StatisticPanel`
+
 - Add `timer` to refresh the `statisticPanel` inside `MainWindow`
+
 - `refreshStatistic()` method to refresh all the statistics.
+
 - 2x button inside StatisticPanel to control speed of the game
 
 # Tasks to be done before April 10th
