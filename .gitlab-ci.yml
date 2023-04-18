@@ -6,7 +6,7 @@ stages:
 
 build:
   stage: build
-  script: javac -cp ./lib/junit-4.13.2.jar -d ./classes ./src/tests/TestBasic.java
+  script: /opt/ibm/java/bin/javac -cp ./lib/junit-4.13.2.jar -d ./classes ./src/tests/TestBasic.java
   artifacts:
     paths:
      - TestBasic.*
