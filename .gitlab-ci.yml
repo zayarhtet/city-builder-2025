@@ -9,7 +9,7 @@ build:
   script: $JAVA_HOME/bin/javac -cp ./lib/junit-4.13.2.jar -d ./classes ./src/tests/TestBasic.java
   artifacts:
     paths:
-     - TestBasic.*
+     - ./src/tests/TestBasic.java
 
 
 test:
