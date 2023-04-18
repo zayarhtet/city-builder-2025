@@ -1,4 +1,4 @@
-image: ibmjava:latest
+image: ibmjava:jre
 
 stages:
   - build
