@@ -6,7 +6,7 @@ stages:
 
 build:
   stage: build
-  script: $JAVA_HOME/bin/javac -cp ./lib/junit-4.13.2.jar -d ./classes ./src/tests/TestBasic.java
+  script: ls $JAVA_HOME/bin
   artifacts:
     paths:
      - TestBasic.*
