@@ -106,7 +106,7 @@
     </pluginManagement>
     <resources>
       <resource>
-        <directory>src/main/java/coffee</directory>
+        <directory>src/main/java/com/coffee/citybuilder</directory>
       </resource>
     </resources>
 
