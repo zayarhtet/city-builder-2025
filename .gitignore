@@ -3,4 +3,5 @@ out/
 .vscode/
 src/resource/database/userdata.json
 .DS_Store
-classesvn
+classes
+targer
