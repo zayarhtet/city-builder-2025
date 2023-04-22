@@ -24,12 +24,8 @@ public class Database {
 
     public Database(){
         this.gson = new GsonBuilder().setPrettyPrinting().create();
-
-        // this.gson = new GsonBuilder.setPrettyPrinting().create();
         this.filePath = "./src/main/java/com/coffee/citybuilder/resource/database";
         this.fileName = "userdata.json";
-        // this.filePath = getClass().getResource("userdata.json");
-
     };
 
     public void saveData(List<City> cities){
@@ -50,23 +46,8 @@ public class Database {
         } catch (IOException e) {
             try {
                 File directory = new File(this.filePath);
-                if (! directory.exists()){
-                    directory.mkdirs();
-                    // If you require it to make the entire directory path including parents,
-                    // use directory.mkdirs(); here instead.
-                }
+                if (! directory.exists()) { directory.mkdirs(); }
 
-                File file = new File(this.filePath + "/" + this.fileName);
-                try{
-                    FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                    BufferedWriter bw = new BufferedWriter(fw);
-                    bw.write("[]");
-                    bw.close();
-                } catch (IOException ex){
-                    e.printStackTrace();
-                    System.exit(-1);
-                }
-            
                 PrintWriter writer = new PrintWriter(this.filePath + "/" + this.fileName, "UTF-8");
                 writer.println("[]");
                 writer.close();
