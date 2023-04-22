@@ -1,7 +1,5 @@
 package com.coffee.citybuilder.persistence;
 
-// import com.google.gson.Gson;
-// import com.google.gson.GsonBuilder;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.coffee.citybuilder.model.City;
@@ -9,11 +7,6 @@ import com.google.gson.Gson;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
