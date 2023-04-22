@@ -1,6 +1,6 @@
 out/
 .idea/
 .vscode/
-src/resource/database/userdata.json
+src/main/java/com/coffee/citybuilder/resource/database/userdata.json
 .DS_Store
-classes
+target
