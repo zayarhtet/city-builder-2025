@@ -43,13 +43,13 @@ public class CityTest {
         // city.demolish(new Position(0, 0), CellItem.H_ROAD);
     }
     @Test
-    public void testIsRoadWhenRoad(){
-        city.constructBuilding(new Position(0, 0), CellItem.H_ROAD);
-        assertTrue(city.isRoad(0, 0));
-        city.constructBuilding(new Position(0, 0), CellItem.GENERAL);
-    }
-    @Test
     public void testIsRoadWhenNoRoad(){
         assertTrue(!city.isRoad(0, 0));
     }
+    @Test
+    public void testIsRoadWhenRoad(){
+        city.buildRoad(new Position(0, 0), CellItem.H_ROAD);
+        assertTrue(city.isRoad(0, 0));
+    }
+    
 }
