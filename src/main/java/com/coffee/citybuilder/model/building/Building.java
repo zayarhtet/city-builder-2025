@@ -3,6 +3,7 @@ package com.coffee.citybuilder.model.building;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.coffee.citybuilder.model.CellItem;
 import com.coffee.citybuilder.model.Position;
 
 public class Building {
@@ -10,7 +11,8 @@ public class Building {
     //private final int reimbursement;
     private List<Building> connections;
     private List<Position> location;
-    public Building(ArrayList<Position> locations){
+    protected CellItem ct;
+    public Building(List<Position> locations){
         this.location = new ArrayList<>(locations);
     }
 
@@ -26,4 +28,7 @@ public class Building {
         return new ArrayList<>(location);
     }
 
+    public int getPrice() { return ct.price; }
+
+    public CellItem getCt() { return ct; }
 }

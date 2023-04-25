@@ -2,6 +2,7 @@ package com.coffee.citybuilder.view;
 
 import javax.swing.*;
 
+import com.coffee.citybuilder.model.City;
 import com.coffee.citybuilder.model.Game;
 import com.coffee.citybuilder.view.component.*;
 
@@ -14,16 +15,17 @@ import java.io.IOException;
 import java.net.URL;
 
 public class MainWindow extends JFrame {
-    private MenuPanel   menu;
-    private LoadGamePanel loadGamePanel;
+    private MenuPanel           menu;
+    private LoadGamePanel       loadGamePanel;
     private StatisticPanel      statisticPanel;
     private InGameButtonPanel   buttonPanel;
-    private CityMap     map;
-    private int         width       = 1000,
-                        height      = 698;
-    public static Color       THEME       = new Color(126,121,224,255);
-    public static Color BG_COLOR           = new Color(225, 214, 124);
-    private Game        game;
+    private CityMap             map;
+    private int                 width       = 1000,
+                                height      = 698;
+    public static Color         THEME       = new Color(126,121,224,255);
+    public static Color         BG_COLOR           = new Color(225, 214, 124);
+    private Game                game;
+    private Timer               inGameTimer;
     public MainWindow() {
         setTitle("CityBuilder 2025");
         setSize(width, height);
@@ -59,6 +61,10 @@ public class MainWindow extends JFrame {
         add(buttonPanel, BorderLayout.EAST);
         buttonPanel.setVisible(false);
 
+        this.inGameTimer = new Timer(1000, e -> {
+            this.statisticPanel.syncLabels();
+        });
+        inGameTimer.start();
         setPreferredSize(new Dimension(width,height));
         setResizable(false);
         setLocationRelativeTo(null);
@@ -68,8 +74,8 @@ public class MainWindow extends JFrame {
 
     public void hideMenuPage() { menu.setVisible(false); }
     public void showMenuPage() { menu.setVisible(true); }
-    public void hideMapPage() { map.setVisible(false); statisticPanel.setVisible(false); buttonPanel.setVisible(false); }
-    public void showMapPage() { map.setVisible(true); statisticPanel.setVisible(true); buttonPanel.setVisible(true); }
+    public void hideMapPage() { map.setVisible(false); statisticPanel.setVisible(false); buttonPanel.setVisible(false); inGameTimer.stop(); }
+    public void showMapPage() { map.setVisible(true); statisticPanel.setVisible(true); buttonPanel.setVisible(true); inGameTimer.start(); }
     public void showLoadGamePage() { loadGamePanel.setVisible(true); }
     public void hideLoadGamePage() { loadGamePanel.setVisible(false); }
     public void instantiateLoadGame() {
@@ -82,7 +88,9 @@ public class MainWindow extends JFrame {
         if (map == null) {
             try { add(map = new CityMap(this), BorderLayout.CENTER); } catch (IOException e) {}
         }
-        map.setCity(game.loadCity(id, username));
+        City city = game.loadCity(id, username);
+        map.setCity(city);
+        statisticPanel.setCity(city);
 
         map.initiateRandomVehicles(1);
     }

@@ -1,20 +1,20 @@
 package com.coffee.citybuilder.model;
 
 public enum CellItem {
-    RESIDENTIAL ('R',1), SERVICE_INDUSTRIAL('S',1), GENERAL('#',1),
+    RESIDENTIAL (30,1), SERVICE_INDUSTRIAL(50,1), GENERAL(0,1),
 
-    POLICE_DEPARTMENT('P',2),
-    STADIUM('T',2),
-    H_ROAD('*',1),
-    V_ROAD('$',1),
-    JUNCTION_ROAD('@', 1),
-    TRANSMISSION_LINE('-',1),
-    POWER_PLANT('p', 2),
-    R_CAR('c', 1),
-    D_CAR('d', 1),
-    DEL_OPT('d',0),
-    DISASTER('~',0);
-    public final char representation;
+    POLICE_DEPARTMENT(80,2),
+    STADIUM(100,2),
+    H_ROAD(5,1),
+    V_ROAD(5,1),
+    JUNCTION_ROAD(5, 1),
+    TRANSMISSION_LINE(10,1),
+    POWER_PLANT(80, 2),
+    R_CAR(0, 1),
+    D_CAR(0, 1),
+    DEL_OPT(0,0),
+    DISASTER(0,0);
+    public final int price;
     public final int tiles;
-    CellItem(char rep, int size) { representation = rep; tiles= size; }
+    CellItem(int cost, int size) { price = cost; tiles= size; }
 }

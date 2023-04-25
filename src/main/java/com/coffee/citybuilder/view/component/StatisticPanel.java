@@ -6,13 +6,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.coffee.citybuilder.model.City;
 import com.coffee.citybuilder.view.MainWindow;
 
 public class StatisticPanel extends JPanel {
 
-    private JLabel expensesLabel, satisfactionLabel, populationLabel, timeLabel;
+    private JLabel budgetLabel, satisfactionLabel, populationLabel, timeLabel;
     private JButton backToMenuButton;
     private final MainWindow frame;
+    private City city;
 
     public StatisticPanel(MainWindow frame) {
         this.frame = frame;
@@ -20,11 +22,11 @@ public class StatisticPanel extends JPanel {
         setBackground(MainWindow.THEME);
         setLayout(null);
 
-        expensesLabel = new JLabel("Expenses: $0");
-        expensesLabel.setForeground(MainWindow.BG_COLOR);
-        expensesLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        expensesLabel.setBounds(250, 10, 150, 30);
-        add(expensesLabel);
+        budgetLabel = new JLabel("Expenses: $0");
+        budgetLabel.setForeground(MainWindow.BG_COLOR);
+        budgetLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        budgetLabel.setBounds(250, 10, 150, 30);
+        add(budgetLabel);
 
         satisfactionLabel = new JLabel("Satisfaction: 0%");
         satisfactionLabel.setForeground(MainWindow.BG_COLOR);
@@ -55,5 +57,19 @@ public class StatisticPanel extends JPanel {
             this.frame.hideMapPage();
             EventModel.DeleteInstance();
         });
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+        syncLabels();
+    }
+
+    public void syncLabels() {
+        if (city == null) return;
+        budgetLabel.setText("Expenses: $"+ city.getBudget());
+        populationLabel.setText("Population: "+ city.getPopulation());
+        satisfactionLabel.setText("Satisfaction: " + city.getSatisfaction() +"%");
+        city.timeGone();
+        timeLabel.setText(city.getDateTime());
     }
 }

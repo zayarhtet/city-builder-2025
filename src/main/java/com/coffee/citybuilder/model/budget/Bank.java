@@ -5,28 +5,34 @@ import java.util.List;
 
 import com.coffee.citybuilder.resource.Constant;
 
+import static com.coffee.citybuilder.resource.Constant.Initial_BUDGET;
+
 public class Bank {
     private int budget;
     private List<Transaction> expenses;
     private List<Transaction> income;
     public Bank(){
-        this.budget = Constant.Initial_BUDGET;
+        this.budget = Initial_BUDGET;
+        this.expenses = new ArrayList<>();
+        this.income = new ArrayList<>();
     }
 
     public boolean cost(String reason, int value) {
-        // initiate Transaction() and add it to the expenses
-        // subtract from the budget // check condition (budget minus is allowed)
-        return false;
+        Transaction trans = new Transaction(reason, value);
+        budget -= value;
+        expenses.add(trans);
+        return true;
     }
 
     public boolean earn(String reason, int value) {
-        // similar to cost();
-        // transation(dayly eaening, value)
-        return false;
+        Transaction trans = new Transaction(reason, value);
+        budget += value;
+        income.add(trans);
+        return true;
     }
 
     public List<Transaction> getExpenses() {
         return new ArrayList<>(expenses);
     }
-
+    public int getBudget() { return budget; }
 }

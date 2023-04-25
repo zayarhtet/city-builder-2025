@@ -14,8 +14,6 @@ public class Transaction {
     }
 
     public Transaction (String cause, int amount) {
-        this.cause = cause;
-        this.amount = amount;
-        this.datetime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+        this(cause, amount, new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
     }
 }
