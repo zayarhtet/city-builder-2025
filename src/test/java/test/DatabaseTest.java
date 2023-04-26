@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.coffee.citybuilder.model.City;
 import com.coffee.citybuilder.persistence.Database;
-
+// DONE
 public class DatabaseTest {
     private Database db = new Database();
     @Test
