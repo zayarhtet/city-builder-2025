@@ -33,6 +33,8 @@ public class City {
     private DateTime        datetime;
     private int             population = 0;
     private int             employedCount = 0;
+    private int             safetyAccess = 0;
+    private int             relaxAccess = 0;
 
     public City(String username) {
         this.id = UUID.randomUUID().toString();
@@ -202,6 +204,7 @@ public class City {
             System.out.println(p.y + "," + p.x + " " + z.getCanWork());
         }
 
+        calculateEmployee();
     }
 
     private boolean isConnected(Position start,Position end){
@@ -259,6 +262,45 @@ public class City {
     public static int reimbursement(int price) {
         return (int) (price*0.5);
     }
+    private void calculateEmployee(){
+        this.employedCount = 0;
+        for(Zone z : zones){
+            if(z.getCanWork()){
+                employedCount += z.getPopulation();
+            }
+        }
+    }
+
+    private int distance(Position a,Position b){
+        double d = Math.sqrt( (a.y-b.y) * (a.y-b.y) + (a.x-b.x) * (a.x-b.x) );
+        return (int)Math.ceil(d);
+    }
+    private boolean withinRadius(Position p,int radius,CellItem ct){
+
+        Position rows = new Position(Math.max(p.y-radius,0),Math.min(p.y+radius,row));
+        Position columns = new Position(Math.max(p.x-radius,0),Math.min(p.x+radius,col));
+
+        for(int r=rows.x; r<=rows.y; r++){
+            for(int c=columns.x; c<=columns.y; c++){
+                if( getCellItem(r,c) == ct && distance(new Position(r,c),p) <=radius ){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private void calculateServiceAccess(){
+        this.safetyAccess = this.relaxAccess = 0;
+
+        for(Zone z : zones){
+            if(z.getCt() == CellItem.RESIDENTIAL){
+                if(withinRadius(z.getLocation(),PoliceDepartment.radius,CellItem.POLICE_DEPARTMENT)){
+                    safetyAccess += z.getPopulation();
+                }
+                //relaxAccess No radius?
+            }
+        }
+    }
     public int getPopulation() { return this.population; }
     public int getEmployedCount() { return this.employedCount; }
     public int getUnemployedCount() {
@@ -271,6 +313,9 @@ public class City {
     }
     public int getSatisfaction() {
         // calculate based on unemployed count, electricity-access count, police, stadium access count, budget
+        //satisfaction = (getUnemployedCount() * 0.3) + (electricityScore * 0.2) +
+        //               (safetyAccess * 0.2) + (relaxAccess * 0.2) +
+        //               (getBudget() * 0.1);
         return 100;
     }
     public String getDateTime() {

@@ -6,9 +6,10 @@ import com.coffee.citybuilder.model.Position;
 import java.util.List;
 
 public class PoliceDepartment extends Building {
-    private int radius = 5;
+    public static final int radius = 5;
     public PoliceDepartment(List<Position> location) {
         super(location);
         super.ct = CellItem.POLICE_DEPARTMENT;
     }
+
 }
