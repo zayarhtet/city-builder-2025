@@ -12,6 +12,8 @@ public enum CellItem {
     POWER_PLANT(80, 2),
     R_CAR(0, 1),
     D_CAR(0, 1),
+    L_CAR(0, 1),
+    T_CAR(0, 1),
     DEL_OPT(0,0),
     DISASTER(0,0);
     public final int price;
