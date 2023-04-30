@@ -11,4 +11,8 @@ public class PowerPlant extends Building {
         super(location);
         super.ct = CellItem.POWER_PLANT;
     }
+
+    public void Share(int value){
+        this.quota -= value;
+    }
 }

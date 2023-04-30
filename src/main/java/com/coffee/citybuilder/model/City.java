@@ -110,7 +110,7 @@ public class City {
         }
         switch (c) {
             case POLICE_DEPARTMENT: buildings.add(new PoliceDepartment(locations)); break;
-            case POWER_PLANT: buildings.add(new PowerPlant(locations)); break;
+            case POWER_PLANT: buildings.add(new PowerPlant(locations)); supplyElectricity(locations.get(0)); break;
             case STADIUM: buildings.add(new Stadium(locations)); break;
         }
     }
@@ -254,6 +254,59 @@ public class City {
         return false;
     }
 
+    private boolean canTrasmit(Position start,Position end){
+        boolean[][] visited = new boolean[row][col];
+        visited[start.y][start.x] = true;
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[] {start.y, start.x});
+
+        while (!queue.isEmpty()) {
+            int[] curr = queue.remove();
+            int y = curr[0];
+            int x = curr[1];
+
+            if (Math.abs(y-end.y)+Math.abs(x-end.x) == 1) {
+                return true;
+            }
+
+
+            if (y > 0 && isConductor(y-1,x) && !visited[y - 1][x]) {
+                visited[y - 1][x] = true;
+                queue.add(new int[] {y - 1, x});
+            }
+            if (y < col - 1 && isConductor(y+1,x) && !visited[y + 1][x]) {
+                visited[y + 1][x] = true;
+                queue.add(new int[] {y + 1, x});
+            }
+            if (x > 0 && isConductor(y,x-1) && !visited[y][x-1]) {
+                visited[y][x - 1] = true;
+                queue.add(new int[] {y, x - 1});
+            }
+            if (x < row - 1 && isConductor(y,x+1) && !visited[y][x + 1]) {
+                visited[y][x + 1] = true;
+                queue.add(new int[] {y, x + 1});
+            }
+        }
+
+        return false;
+    }
+    private void supplyElectricity(Position p){
+        for(Building b : buildings){
+            b.setHasElectricity(false);
+            for(Position q : b.getLocation()){
+                if(canTrasmit(p,q)){
+                    b.setHasElectricity(true);
+                    break;
+                }
+            }
+        }
+
+        for(Zone z : zones){
+            z.setHasElectricity(canTrasmit(p,z.getLocation()));
+        }
+    }
+
     public Disaster spawnDisaster(){
         Random r = new Random();
         int i = r.nextInt(1);
@@ -313,7 +366,7 @@ public class City {
     }
     public int getSatisfaction() {
         // calculate based on unemployed count, electricity-access count, police, stadium access count, budget
-        //satisfaction = (getUnemployedCount() * 0.3) + (electricityScore * 0.2) +
+        //satisfaction = (getEmployedCount() * 0.3) + (electricityScore * 0.2) +
         //               (safetyAccess * 0.2) + (relaxAccess * 0.2) +
         //               (getBudget() * 0.1);
         return 100;
@@ -350,5 +403,10 @@ public class City {
     public boolean isVRoad(int row, int col) {
         if (row >= this.row || col >= this.col) return false;
         return cells[row][col] == CellItem.V_ROAD || cells[row][col] == CellItem.JUNCTION_ROAD;
+    }
+
+    private boolean isConductor(int row,int col){
+        if (row >= this.row || col >= this.col) return false;
+        return !( isRoad(row,col) || isVRoad(row,col) || cells[row][col] == CellItem.GENERAL );
     }
 }

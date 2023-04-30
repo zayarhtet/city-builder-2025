@@ -9,6 +9,7 @@ import com.coffee.citybuilder.model.Position;
 public class Building {
     //private final int cost;
     //private final int reimbursement;
+    private boolean hasElectricity = false;
     private List<Building> connections;
     private List<Position> location;
     protected CellItem ct;
@@ -31,4 +32,6 @@ public class Building {
     public int getPrice() { return ct.price; }
 
     public CellItem getCt() { return ct; }
+    public boolean isHasElectricity(){ return hasElectricity; }
+    public void setHasElectricity(boolean value){ this.hasElectricity = value; }
 }
