@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import com.coffee.citybuilder.model.City;
 import com.coffee.citybuilder.model.Game;
+import com.coffee.citybuilder.model.budget.Bank;
 import com.coffee.citybuilder.view.component.*;
 
 import java.awt.*;
@@ -17,6 +18,7 @@ import java.net.URL;
 public class MainWindow extends JFrame {
     private MenuPanel           menu;
     private LoadGamePanel       loadGamePanel;
+    private TransactionPanel transactionPanel;
     private StatisticPanel      statisticPanel;
     private InGameButtonPanel   buttonPanel;
     private CityMap             map;
@@ -43,7 +45,6 @@ public class MainWindow extends JFrame {
         });
         String path = "resource/player.png";
         URL url = MainWindow.class.getClassLoader().getResource(path);
-        System.out.println(url.toString());
         setIconImage(Toolkit.getDefaultToolkit().getImage(url));
         setLayout(new BorderLayout(0, 2));
 
@@ -78,6 +79,16 @@ public class MainWindow extends JFrame {
     public void showMapPage() { map.setVisible(true); statisticPanel.setVisible(true); buttonPanel.setVisible(true); inGameTimer.start(); }
     public void showLoadGamePage() { loadGamePanel.setVisible(true); }
     public void hideLoadGamePage() { loadGamePanel.setVisible(false); }
+    public void showTransactionPage(Bank bank) {
+        if (transactionPanel == null) {
+            add(this.transactionPanel = new TransactionPanel(bank, this), BorderLayout.CENTER);
+        }
+        transactionPanel.syncTable(bank);
+        transactionPanel.setVisible(true);
+    }
+    public void hideTransactionPage() {
+        transactionPanel.setVisible(false);
+    }
     public void instantiateLoadGame() {
         if (loadGamePanel == null) {
             add(loadGamePanel = new LoadGamePanel(this.game.getAllCities(),  this));

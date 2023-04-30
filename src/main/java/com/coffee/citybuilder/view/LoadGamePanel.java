@@ -15,11 +15,6 @@ public class LoadGamePanel extends JPanel {
     private final MainWindow frame;
     private JTable table;
     private DefaultTableModel tableModel;
-
-    // List<String> namesList = personList.stream()
-    //                                   .map(Person::getName)
-    //                                   .collect(Collectors.toList());
-
     private final List<City> cities;
     public LoadGamePanel(List<City> tCities, MainWindow m) {
         this.frame = m;

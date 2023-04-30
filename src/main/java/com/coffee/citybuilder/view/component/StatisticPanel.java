@@ -1,10 +1,7 @@
 package com.coffee.citybuilder.view.component;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import java.awt.*;
+import java.net.URL;
+import javax.swing.*;
 
 import com.coffee.citybuilder.model.City;
 import com.coffee.citybuilder.view.MainWindow;
@@ -12,7 +9,7 @@ import com.coffee.citybuilder.view.MainWindow;
 public class StatisticPanel extends JPanel {
 
     private JLabel budgetLabel, satisfactionLabel, populationLabel, timeLabel;
-    private JButton backToMenuButton;
+    private JButton backToMenuButton, transactionButton;
     private final MainWindow frame;
     private City city;
 
@@ -46,14 +43,42 @@ public class StatisticPanel extends JPanel {
         timeLabel.setBounds(800, 10, 150, 30);
         add(timeLabel);
 
-        backToMenuButton = new JButton("Back to Menu");
+        backToMenuButton = new JButton();
         backToMenuButton.setFont(new Font("Courier", Font.BOLD, 14));
-        backToMenuButton.setBounds(50, 10, 150, 30);
+        backToMenuButton.setBounds(50, 5, 50, 40);
         backToMenuButton.setBackground(MainWindow.BG_COLOR);
         backToMenuButton.setForeground(MainWindow.THEME);
+
+        URL url = InGameButtonPanel.class.getClassLoader().getResource("resource/back-2.png");
+        Image element = Toolkit.getDefaultToolkit().getImage(url);
+        Icon icon = new ImageIcon(element.getScaledInstance( 30, 30,  java.awt.Image.SCALE_SMOOTH ));
+        backToMenuButton.setContentAreaFilled(false);
+//        backToMenuButton.setBorderPainted(false);
+        backToMenuButton.setIcon(icon);
+
         add(backToMenuButton);
         backToMenuButton.addActionListener(e -> {
             this.frame.showMenuPage();
+            this.frame.hideMapPage();
+            EventModel.DeleteInstance();
+        });
+
+        transactionButton = new JButton();
+        transactionButton.setFont(new Font("Courier", Font.BOLD, 14));
+        transactionButton.setBounds(150,5,50,40);
+        transactionButton.setBackground(MainWindow.BG_COLOR);
+        transactionButton.setForeground(MainWindow.THEME);
+
+        url = InGameButtonPanel.class.getClassLoader().getResource("resource/banking.png");
+        element = Toolkit.getDefaultToolkit().getImage(url);
+        icon = new ImageIcon(element.getScaledInstance( 30, 30,  java.awt.Image.SCALE_SMOOTH ));
+        transactionButton.setContentAreaFilled(false);
+//        transactionButton.setBorderPainted(false);
+        transactionButton.setIcon(icon);
+
+        add(transactionButton);
+        transactionButton.addActionListener(e -> {
+            this.frame.showTransactionPage(city.getBank());
             this.frame.hideMapPage();
             EventModel.DeleteInstance();
         });

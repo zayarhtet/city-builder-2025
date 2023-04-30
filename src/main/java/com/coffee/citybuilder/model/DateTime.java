@@ -21,13 +21,11 @@ public class DateTime {
         this.minute = minute;
         this.second = second;
         this.refreshDateString();
-        System.out.println("Called");
     }
     private void refreshDateString() {
         currentDateString =  year +"." + (month < 10? "0"+month : month) + "." + (day < 10? "0"+ day :day) + " " + (hour < 10? "0"+hour:hour) + ":" + (minute < 10? "0"+minute:minute);
     }
     public String getDate() {
-        System.out.println(currentDateString+":"+this.second);
         return currentDateString;
     }
     public void timeMove() {

@@ -17,6 +17,12 @@ public class Bank {
         this.income = new ArrayList<>();
     }
 
+    public Bank(Bank bank) {
+        this.budget = bank.budget;
+        this.expenses = new ArrayList<>(bank.expenses);
+        this.income = new ArrayList<>(bank.income);
+    }
+
     public boolean cost(String reason, int value) {
         Transaction trans = new Transaction(reason, value);
         budget -= value;
@@ -34,5 +40,6 @@ public class Bank {
     public List<Transaction> getExpenses() {
         return new ArrayList<>(expenses);
     }
+    public List<Transaction> getIncomes() { return new ArrayList<>(income); }
     public int getBudget() { return budget; }
 }

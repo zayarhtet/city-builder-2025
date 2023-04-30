@@ -221,6 +221,7 @@ public class City {
     public String getCreatedDate() { return this.createdDate; }
     public String getModifiedDate() { return this.lastModifiedDate; }
     public int getBudget() { return this.bank.getBudget(); }
+    public Bank getBank() { return new Bank(this.bank); }
     public void setModifiedDate() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         this.lastModifiedDate = formatter.format(new Date());
