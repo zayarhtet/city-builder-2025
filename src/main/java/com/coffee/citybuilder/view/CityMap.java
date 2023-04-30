@@ -19,7 +19,6 @@ import java.util.Map;
 public class CityMap extends JPanel implements MouseMotionListener, MouseListener {
     private JFrame                  mainFrame;
     private int                     tile_size = 30;
-    private int                     speed = 1;
     private int                     vehicleFrameRate = 1;
     private int [][]                vehiclesRow;
     private int [][]                vehiclesCol;
