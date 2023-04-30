@@ -12,6 +12,8 @@ import com.coffee.citybuilder.model.zone.ResidentialZone;
 import com.coffee.citybuilder.model.zone.ServiceIndustrialZone;
 import com.coffee.citybuilder.model.zone.Zone;
 
+import javax.sound.midi.SysexMessage;
+
 import static com.coffee.citybuilder.resource.Constant.Initial_Population;
 import static com.coffee.citybuilder.resource.Constant.ROAD_COST;
 
@@ -61,6 +63,7 @@ public class City {
         if (isOccupied(p)) return;
         if(!bank.cost(ct.toString(), ct.price)) return;
         cells[p.y][p.x] = ct;
+        //System.out.println(isConnected(p,new Position(0,0)));
         Zone rz;
         switch (ct) {
             case RESIDENTIAL:
@@ -74,6 +77,7 @@ public class City {
                 zones.add(rz);
                 break;
         }
+        refreshConnection();
     }
 
     public void constructBuilding(Position p,CellItem c){
@@ -127,6 +131,7 @@ public class City {
             default:
                 break;
         }
+        refreshConnection();
         setModifiedDate();
     }
 
@@ -150,14 +155,14 @@ public class City {
 
     public void deleteRoad(Position p){
         CellItem ct = cells[p.y][p.x];
-        cells[p.y][p.x] = CellItem.GENERAL;
+        cells[p.x][p.y] = CellItem.GENERAL;
         roads.remove(p);
         bank.earn("Demolish Road", reimbursement(ct.price));
     }
 
     public void deleteTransmissionLine(Position p){
         CellItem ct = cells[p.y][p.x];
-        cells[p.y][p.x] = CellItem.GENERAL;
+        cells[p.x][p.y] = CellItem.GENERAL;
         transmissionLines.remove(p);
         bank.earn("Demolish Transmission Line", reimbursement(ct.price));
     }
@@ -179,6 +184,71 @@ public class City {
         CellItem ct = buildings.get(ind).getCt();
         buildings.remove(ind);
         bank.earn("Demolish "+ ct.toString(), reimbursement(ct.price));
+    }
+    private void refreshConnection(){
+
+        for(Zone a : zones){
+            if(a.getCt() != CellItem.RESIDENTIAL) continue;
+            for(Zone b : zones){
+                if(b.getCt() != CellItem.SERVICE_INDUSTRIAL) continue;
+
+                a.setCanWork(isConnected(a.getLocation(),b.getLocation()));
+
+            }
+        }
+
+        for(Zone z : zones){
+            Position p = z.getLocation();
+            System.out.println(p.y + "," + p.x + " " + z.getCanWork());
+        }
+
+    }
+
+    private boolean isConnected(Position start,Position end){
+
+        if(cells[start.y][start.x] == cells[end.y][end.x])
+            return false;
+        if(cells[start.y][start.x] != CellItem.RESIDENTIAL && cells[start.y][start.x] != CellItem.SERVICE_INDUSTRIAL)
+            return false;
+        if(cells[end.y][end.x] != CellItem.RESIDENTIAL && cells[end.y][end.x] != CellItem.SERVICE_INDUSTRIAL)
+            return false;
+
+        boolean[][] visited = new boolean[row][col];
+        visited[start.y][start.x] = true;
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[] {start.y, start.x});
+
+        while (!queue.isEmpty()) {
+            int[] curr = queue.remove();
+            int y = curr[0];
+            int x = curr[1];
+
+            if (Math.abs(y-end.y)+Math.abs(x-end.x) == 1) {
+                return true;
+            }
+
+            // check adjacent cells
+
+            if (y > 0 && isVRoad(y-1,x) && !visited[y - 1][x]) {
+                visited[y - 1][x] = true;
+                queue.add(new int[] {y - 1, x});
+            }
+            if (y < col - 1 && isVRoad(y+1,x) && !visited[y + 1][x]) {
+                visited[y + 1][x] = true;
+                queue.add(new int[] {y + 1, x});
+            }
+            if (x > 0 && isRoad(y,x-1) && !visited[y][x-1]) {
+                visited[y][x - 1] = true;
+                queue.add(new int[] {y, x - 1});
+            }
+            if (x < row - 1 && isRoad(y,x+1) && !visited[y][x + 1]) {
+                visited[y][x + 1] = true;
+                queue.add(new int[] {y, x + 1});
+            }
+        }
+
+        return false;
     }
 
     public Disaster spawnDisaster(){
