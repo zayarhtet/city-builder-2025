@@ -191,13 +191,21 @@ public class City {
     private void refreshConnection(){
 
         for(Zone a : zones){
-            if(a.getCt() != CellItem.RESIDENTIAL) continue;
+            if(a.getCt() != CellItem.SERVICE_INDUSTRIAL) continue;
+            int availableWorkers = 0;
             for(Zone b : zones){
-                if(b.getCt() != CellItem.SERVICE_INDUSTRIAL) continue;
-
-                a.setCanWork(isConnected(a.getLocation(),b.getLocation()));
-
+                if(b.getCt() != CellItem.RESIDENTIAL) continue;
+                if(isConnected(a.getLocation(),b.getLocation())){
+                    b.setCanWork(true);
+                    availableWorkers += b.getPopulation();
+                }
             }
+
+            if(a instanceof ServiceIndustrialZone){
+//                ServiceIndustrialZone sz = (ServiceIndustrialZone) a;
+                ( (ServiceIndustrialZone) a).increaseWorkers(availableWorkers);
+            }
+
         }
 
         for(Zone z : zones){
