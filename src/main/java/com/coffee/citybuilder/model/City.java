@@ -59,6 +59,7 @@ public class City {
         if (bank.cost("Road", ROAD_COST)) {
             cells[p.y][p.x] = ct;
         }
+        refreshConnection();
     }
 
     public void assignZone(Position p, CellItem ct) {
@@ -323,8 +324,26 @@ public class City {
     }
     public void timeGone() {
         datetime.timeMove();
+        setModifiedDate();
+        if (datetime.isYearEnd()) {
+            collectTax();
+            payPension();
+            spendMaintenanceFee();
+            datetime.doneYearEnd();
+        }
     }
-
+    private void collectTax() {
+        bank.earn("Taxation from Industries", (int)(employedCount*0.2));
+    }
+    private void payPension() {
+        int pensionerCount = new Random().nextInt((int)(population*0.1));
+        bank.cost("Pension", pensionerCount*3 );
+    }
+    private void spendMaintenanceFee() {
+        bank.cost("Building Maintenance", buildings.size()*1);
+        bank.cost("Road Maintenance", (int)(roads.size()*0.5));
+        bank.cost("Transmission Line Maintenance", (int) (transmissionLines.size() * 0.5));
+    }
     public CellItem getCellItem(int row, int col) { return cells[row][col]; }
     public int getColumnCount() { return col; }
     public int getRowCount() { return row; }

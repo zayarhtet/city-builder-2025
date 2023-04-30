@@ -20,7 +20,7 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
     private JFrame                  mainFrame;
     private int                     tile_size = 30;
     private int                     speed = 1;
-    private int                     vehicleFrameRate = 2;
+    private int                     vehicleFrameRate = 1;
     private int [][]                vehiclesRow;
     private int [][]                vehiclesCol;
     private City                    city;
@@ -33,11 +33,10 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             Map.entry(CellItem.POLICE_DEPARTMENT, ResourceLoader.loadImage("resource/pd.png")),
             Map.entry(CellItem.R_CAR, ResourceLoader.loadImage("resource/right-car.png")),
             Map.entry(CellItem.D_CAR, ResourceLoader.loadImage("resource/down-car.png")),
-//            entry(CellItem.POWER_PLANT, ResourceLoader.loadImage("resource/powerplant-21.png")),
-Map.entry(CellItem.POWER_PLANT, ResourceLoader.loadImage("resource/pp.png")),
-Map.entry(CellItem.STADIUM, ResourceLoader.loadImage("resource/stadium-2.png")),
-Map.entry(CellItem.RESIDENTIAL, ResourceLoader.loadImage("resource/residential-2.png")),
-Map.entry(CellItem.SERVICE_INDUSTRIAL, ResourceLoader.loadImage("resource/factory-2.png"))
+            Map.entry(CellItem.POWER_PLANT, ResourceLoader.loadImage("resource/pp.png")),
+            Map.entry(CellItem.STADIUM, ResourceLoader.loadImage("resource/stadium-2.png")),
+            Map.entry(CellItem.RESIDENTIAL, ResourceLoader.loadImage("resource/residential-2.png")),
+            Map.entry(CellItem.SERVICE_INDUSTRIAL, ResourceLoader.loadImage("resource/factory-2.png"))
             // you can add many graphic as you want
     );
 
@@ -125,6 +124,7 @@ Map.entry(CellItem.SERVICE_INDUSTRIAL, ResourceLoader.loadImage("resource/factor
     }
 
     /*************************************** Vehicles Starts ****************************************/
+    public void setVehicleFrameRate(int i) { this.vehicleFrameRate = i; }
     public void renderVehicles(Graphics2D gr) {
         for (int col = 0; col < vehiclesCol.length; col++) {
             for (int j = 0; j < vehiclesCol[col].length; j++) {
