@@ -59,7 +59,7 @@ public class City {
         assignZone(new Position(rand.nextInt(col-2), rand.nextInt(row-2)), CellItem.RESIDENTIAL);
         assignZone(new Position(rand.nextInt(col-2), rand.nextInt(row-2)), CellItem.RESIDENTIAL);
     }
-
+    
     public void buildRoad(Position p, CellItem ct) {
         if (bank.cost("Road", ROAD_COST)) {
             cells[p.y][p.x] = ct;
