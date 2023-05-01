@@ -11,8 +11,9 @@ public class DateTime {
     private String currentDateString;
 
     public DateTime() {
-        this(2025,1,1,0,0,0);
+        this(2025, 1, 1, 0, 0, 0);
     }
+
     public DateTime(int year, int month, int day, int hour, int minute, int second) {
         this.year = year;
         this.month = month;
@@ -23,13 +24,17 @@ public class DateTime {
         this.refreshDateString();
         System.out.println("Called");
     }
+
     private void refreshDateString() {
-        currentDateString =  year +"." + (month < 10? "0"+month : month) + "." + (day < 10? "0"+ day :day) + " " + (hour < 10? "0"+hour:hour) + ":" + (minute < 10? "0"+minute:minute);
+        currentDateString = year + "." + (month < 10 ? "0" + month : month) + "." + (day < 10 ? "0" + day : day) + " "
+                + (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute);
     }
+
     public String getDate() {
-        System.out.println(currentDateString+":"+this.second);
+        System.out.println(currentDateString + ":" + this.second);
         return currentDateString;
     }
+
     public void timeMove() {
         this.second++;
         if (this.second >= 60) {
@@ -41,10 +46,10 @@ public class DateTime {
                 if (this.hour >= 24) {
                     this.day++;
                     this.hour = 1;
-                    if (this.day >= getMaxDay()) {
+                    if (this.day > getMaxDay()) {
                         this.month++;
                         this.day = 1;
-                        if (this.month >= 12) {
+                        if (this.month > 12) {
                             year++;
                             this.month = 1;
                         }
