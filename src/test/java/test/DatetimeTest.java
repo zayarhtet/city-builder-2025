@@ -31,7 +31,7 @@ public class DatetimeTest {
 
     @Test
     public void test_OverloadSecond() {
-        DateTime datetime = getDatetime(year, month, day, hour, minute, 58);
+        DateTime datetime = getDatetime(year, month, day, hour, 58, 58);
         datetime.timeMove();
         assertEquals("2023.12.31 23:59", datetime.getDate());
 
@@ -41,7 +41,6 @@ public class DatetimeTest {
     public void test_OverloadMinute() {
         DateTime datetime = getDatetime(year, month, day, hour, 58, second);
         datetime.timeMove();
-        // TODO: should this be 00:00 or 01:00
         assertEquals("2023.12.31 23:59", datetime.getDate());
 
     }
@@ -59,7 +58,7 @@ public class DatetimeTest {
     public void test_OverloadDay() {
         DateTime datetime = getDatetime(year, month, 30, hour, minute, second);
         datetime.timeMove();
-        assertEquals("2023.12.31 01:00", datetime.getDate());
+        assertEquals("2023.12.31 00:00", datetime.getDate());
 
     }
 
@@ -67,7 +66,7 @@ public class DatetimeTest {
     public void test_OverloadMonth() {
         DateTime datetime = getDatetime(year, month, day, hour, minute, second);
         datetime.timeMove();
-        assertEquals("2024.01.01 01:00", datetime.getDate());
+        assertEquals("2024.01.01 00:00", datetime.getDate());
 
     }
 
@@ -75,7 +74,7 @@ public class DatetimeTest {
     public void test_OverloadYear() {
         DateTime datetime = getDatetime(year, month, day, hour, minute, second);
         datetime.timeMove();
-        assertEquals("2024.01.01 01:00", datetime.getDate());
+        assertEquals("2024.01.01 00:00", datetime.getDate());
 
     }
 }
