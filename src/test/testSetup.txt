@@ -21,11 +21,11 @@ java -cp target/coffee-1-jar-with-dependencies.jar com.coffee.citybuilder.Main
 
 
 Test classes:
-Bank
-Transaction
-City
-Position (Equals)
-Database
+Bank +
+Transaction TODO (blocked)
+City +
+Position (Equals) +
+Database +
 DateTime
 
 Done
