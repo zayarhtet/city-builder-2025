@@ -14,6 +14,6 @@ public class ServiceIndustrialZone extends Zone {
     }
     public void increaseWorkers(int value){
         workers = Math.min(workers+value,workerCapacity);
-        System.out.println(workers + " out of " + workerCapacity);
+//        System.out.println(workers + " out of " + workerCapacity);
     }
 }
