@@ -5,6 +5,7 @@ import javax.swing.Timer;
 
 import com.coffee.citybuilder.model.*;
 import com.coffee.citybuilder.model.building.Building;
+import com.coffee.citybuilder.model.zone.Zone;
 import com.coffee.citybuilder.resource.ResourceLoader;
 import com.coffee.citybuilder.view.component.EventModel;
 import com.coffee.citybuilder.view.component.Vehicle;
@@ -39,9 +40,9 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             Map.entry(CellItem.POWER_PLANT, ResourceLoader.loadImage("resource/pp.png")),
             Map.entry(CellItem.STADIUM, ResourceLoader.loadImage("resource/stadium-2.png")),
             Map.entry(CellItem.RESIDENTIAL, ResourceLoader.loadImage("resource/residential-2.png")),
+            Map.entry(CellItem.RESIDENTIAL_NONE, ResourceLoader.loadImage("resource/residential-4.png")),
             Map.entry(CellItem.SERVICE_INDUSTRIAL, ResourceLoader.loadImage("resource/factory-2.png")),
-            Map.entry(CellItem.TRANSMISSION_LINE, ResourceLoader.loadImage("resource/Trans.png"))
-//            entry(CellItem.POWER_PLANT, ResourceLoader.loadImage("resource/powerplant-21.png")),
+            Map.entry(CellItem.TRANSMISSION_LINE, ResourceLoader.loadImage("resource/Trans-1.png"))
             // you can add many graphic as you want
     );
 
@@ -100,6 +101,15 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
                 if (img == null) continue;
                 gr.drawImage(img, j*tile_size, i*tile_size, tile_size, tile_size, null );
             }
+        }
+        List<Zone> zones = city.getZones();
+        Iterator<Zone> zonesIter = zones.iterator();
+        while(zonesIter.hasNext()) {
+            Zone z = zonesIter.next();
+            if (z.getCt() != CellItem.RESIDENTIAL) continue;
+            if (z.getCanWork()) continue;
+            Position p = z.getLocation();
+            gr.drawImage(graphics.get(CellItem.RESIDENTIAL_NONE), p.x*tile_size, p.y*tile_size, tile_size, tile_size, null );
         }
 
         // buildings rendering

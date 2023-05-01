@@ -7,8 +7,6 @@ import com.coffee.citybuilder.model.CellItem;
 import com.coffee.citybuilder.model.Position;
 
 public class Building {
-    //private final int cost;
-    //private final int reimbursement;
     private boolean hasElectricity = false;
     private List<Building> connections;
     private List<Position> location;

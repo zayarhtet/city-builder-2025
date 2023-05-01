@@ -29,19 +29,19 @@ public class StatisticPanel extends JPanel {
         satisfactionLabel = new JLabel("0%");
         satisfactionLabel.setForeground(MainWindow.BG_COLOR);
         satisfactionLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        satisfactionLabel.setBounds(675, 10, 50, 30);
+        satisfactionLabel.setBounds(675, 10, 75, 30);
         add(satisfactionLabel);
 
         populationLabel = new JLabel("0");
         populationLabel.setForeground(MainWindow.BG_COLOR);
         populationLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        populationLabel.setBounds(750, 10, 50, 30);
+        populationLabel.setBounds(775, 10, 50, 30);
         add(populationLabel);
 
         timeLabel = new JLabel("2023.04.11 22:10");
         timeLabel.setForeground(MainWindow.BG_COLOR);
         timeLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        timeLabel.setBounds(800, 10, 150, 30);
+        timeLabel.setBounds(850, 10, 150, 30);
         add(timeLabel);
 
         backToMenuButton = new JButton();

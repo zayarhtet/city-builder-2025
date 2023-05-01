@@ -2,6 +2,7 @@ package com.coffee.citybuilder.model;
 
 public enum CellItem {
     RESIDENTIAL (30,1,1), SERVICE_INDUSTRIAL(50,1,2), GENERAL(0,1),
+    RESIDENTIAL_NONE(0,0),
     POLICE_DEPARTMENT(80,2,2),
     STADIUM(100,2,2),
     H_ROAD(5,1),

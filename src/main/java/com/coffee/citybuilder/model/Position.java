@@ -23,4 +23,8 @@ public class Position {
         Position other = (Position) o;
         return Objects.equals(other.x, this.x) && Objects.equals(other.y, this.y);
     }
+
+    public String toString() {
+        return this.x + " " + this.y;
+    }
 }

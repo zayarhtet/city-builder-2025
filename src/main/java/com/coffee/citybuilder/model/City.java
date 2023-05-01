@@ -30,11 +30,16 @@ public class City {
     private List<Building> buildings = new ArrayList<>();
     private List<Position> transmissionLines = new ArrayList<>();
     private List<Zone> zones = new ArrayList<>();
-    private DateTime datetime;
+    private DateTime datetime = new DateTime();
     private int population = 0;
     private int employedCount = 0;
     private int safetyAccess = 0;
     private int relaxAccess = 0;
+    private int electricityPopulation = 0;
+    private int electricityCount = 0;
+    private int vacantCount = 0;
+    private int residentialZoneCount = 0;
+    private int serviceIndustrialZoneCount = 0;
 
     public City(String username) {
         this.id = UUID.randomUUID().toString();
@@ -51,13 +56,14 @@ public class City {
         this.bank = new Bank();
         this.datetime = new DateTime();
         Random rand = new Random();
-        assignZone(new Position(rand.nextInt(col), rand.nextInt(row)), CellItem.RESIDENTIAL);
-        assignZone(new Position(rand.nextInt(col), rand.nextInt(row)), CellItem.RESIDENTIAL);
+        assignZone(new Position(rand.nextInt(col-2), rand.nextInt(row-2)), CellItem.RESIDENTIAL);
+        assignZone(new Position(rand.nextInt(col-2), rand.nextInt(row-2)), CellItem.RESIDENTIAL);
     }
 
     public void buildRoad(Position p, CellItem ct) {
         if (bank.cost("Road", ROAD_COST)) {
             cells[p.y][p.x] = ct;
+            roads.add(new Position(p));
             refreshConnection();
         }
     }
@@ -74,18 +80,18 @@ public class City {
         if (isOccupied(p)) return;
         if (!bank.cost(ct.toString(), ct.price)) return;
         cells[p.y][p.x] = ct;
-        //System.out.println(isConnected(p,new Position(0,0)));
         Zone rz;
         switch (ct) {
             case RESIDENTIAL:
                 rz = new ResidentialZone(p);
                 this.population += rz.getPopulation();
+                this.residentialZoneCount++;
                 zones.add(rz);
                 break;
             case SERVICE_INDUSTRIAL:
                 rz = new ServiceIndustrialZone(p);
-                this.employedCount += rz.getPopulation();
                 zones.add(rz);
+                this.serviceIndustrialZoneCount++;
                 break;
         }
         refreshConnection();
@@ -172,8 +178,8 @@ public class City {
             Zone z = (Zone) iter.next();
             if (z.isAt(p)) {
                 switch (z.getCt()) {
-                    case RESIDENTIAL : this.population -= z.getPopulation(); break;
-                    case SERVICE_INDUSTRIAL : this.employedCount -= z.getPopulation(); break;
+                    case RESIDENTIAL : this.population -= z.getPopulation(); this.residentialZoneCount--; break;
+                    case SERVICE_INDUSTRIAL : this.vacantCount -= z.getWorkerCapacity(); this.employedCount -= z.getPopulation(); this.serviceIndustrialZoneCount--; break;
                 }
                 iter.remove();
                 break;
@@ -216,32 +222,39 @@ public class City {
     }
 
     private void refreshConnection() {
-
+        employedCount = 0;
+        vacantCount = 0;
         for (Zone a : zones) {
-            int availableWorkers = 0;
+            int availableWorkers = 0; boolean had = false;
             if (a.getCt() != CellItem.SERVICE_INDUSTRIAL) continue;
             for (Zone b : zones) {
                 if (b.getCt() != CellItem.RESIDENTIAL) continue;
 
                 if( isConnected(a.getLocation(), b.getLocation())){
+                    had = true;
                     b.setCanWork(true);
                     availableWorkers += b.getPopulation();
                 }
-
             }
-            if(a instanceof ServiceIndustrialZone){
-//                ServiceIndustrialZone sz = (ServiceIndustrialZone) a;
-                ( (ServiceIndustrialZone) a).increaseWorkers(availableWorkers);
+            if (had) {
+                a.increaseWorkers(availableWorkers);
+                employedCount += a.getPopulation();
+            } else {
+                a.decreaseWorkers();
             }
-
+            vacantCount += a.getWorkerCapacity();
         }
-
-        for (Zone z : zones) {
-            Position p = z.getLocation();
-            //System.out.println(p.y + "," + p.x + " " + z.getCanWork());
+        employedCount = Math.min(employedCount, population);
+        for(Zone a: zones) {
+            if (a.getCt() != CellItem.RESIDENTIAL) continue;
+            a.setCanWork(false);
+            for (Zone b : zones) {
+                if(b.getCt() != CellItem.SERVICE_INDUSTRIAL) continue;
+                if (isConnected(a.getLocation(), b.getLocation())) {
+                    a.setCanWork(true); break;
+                }
+            }
         }
-
-        calculateEmployee();
     }
 
     private boolean isConnected(Position start, Position end) {
@@ -356,51 +369,42 @@ public class City {
 
     private void supplyElectricity() {
 
-        for (Building b : buildings) {
-            b.setHasElectricity(false);
-        }
+        for (Building b : buildings) { b.setHasElectricity(false); }
 
-        for (Zone z : zones) {
-            z.setHasElectricity(false);
-        }
+        for (Zone z : zones) { z.setHasElectricity(false); }
+
+        electricityPopulation = 0; electricityCount = 0;
 
         for (Building p : buildings) {
-            if (p.getCt() != CellItem.POWER_PLANT)
-                continue;
+            if (p.getCt() != CellItem.POWER_PLANT) continue;
             p.resetQuota();
-
             for (Building b : buildings) {
                 if (!b.isHasElectricity()) {
-
-                    if (!canTransmit(p.topLeft(), b.topLeft())) {
-                        continue;
-                    }
+                    if (!canTransmit(p.topLeft(), b.topLeft())) { continue; }
                     if (p.canShare(b.getCt().electricityDemand)) {
                         p.Share(b.getCt().electricityDemand);
                         b.setHasElectricity(true);
+                        electricityCount++;
                         //System.out.println(b.getCt() + " has Electricity "+b.getCt().electricityDemand);
                     }
                 }
-
             }
 
             for (Zone z : zones) {
                 if (!z.isHasElectricity()) {
-
-                    if (!canTransmit(p.topLeft(), z.getLocation())) {
-                        continue;
-                    }
+                    if (!canTransmit(p.topLeft(), z.getLocation())) continue;
                     if (p.canShare(z.getCt().electricityDemand)) {
                         p.Share(z.getCt().electricityDemand);
                         z.setHasElectricity(true);
+                        if (z.getCt() == CellItem.RESIDENTIAL) {
+                            electricityPopulation += z.getPopulation();
+                        }
                         //System.out.println(z.getCt() + " has Electricity "+z.getCt().electricityDemand);
                         //System.out.println(z.getCt() + " has Electricity "+z.getCt().electricityDemand);
                     }
-
                 }
             }
         }
-
     }
 
     public Disaster spawnDisaster() {
@@ -408,35 +412,18 @@ public class City {
         int i = r.nextInt(1);
         return Disaster.values()[i];
     }
-
-    public static int reimbursement(int price) {
-        return (int) (price * 0.5);
-    }
-
-    private void calculateEmployee() {
-        this.employedCount = 0;
-        for (Zone z : zones) {
-            if (z.getCanWork()) {
-                employedCount += z.getPopulation();
-            }
-        }
-    }
-
     private int distance(Position a, Position b) {
         double d = Math.sqrt((a.y - b.y) * (a.y - b.y) + (a.x - b.x) * (a.x - b.x));
         return (int) Math.ceil(d);
     }
 
     private boolean withinRadius(Position p, int radius, CellItem ct) {
-
         Position rows = new Position(Math.max(p.y - radius, 0), Math.min(p.y + radius, row));
         Position columns = new Position(Math.max(p.x - radius, 0), Math.min(p.x + radius, col));
 
         for (int r = rows.x; r <= rows.y; r++) {
             for (int c = columns.x; c <= columns.y; c++) {
-                if (getCellItem(r, c) == ct && distance(new Position(r, c), p) <= radius) {
-                    return true;
-                }
+                if (getCellItem(r, c) == ct && distance(new Position(r, c), p) <= radius) { return true; }
             }
         }
         return false;
@@ -454,35 +441,25 @@ public class City {
             }
         }
     }
-
-    public int getPopulation() {
-        return this.population;
+    public double getSatisfactionNew() {
+        double totalSatisfied = safetyAccess + relaxAccess + 0.5 * electricityPopulation + 0.5 * employedCount;
+        double totalUnsatisfied = population - totalSatisfied - getUnemployedCount();
+        double budgetSatisfaction = (bank.getBudget() >= 0) ? 1.0 : 0.0;
+        double sat = 100.0 * (totalSatisfied + budgetSatisfaction - getUnemployedCount()) / population;
+        return (double) Math.round(sat * 100) / 100;
     }
+    public double getSatisfaction() {
+        double policePercentage = (double) safetyAccess / population * 100;
+        double relaxationPercentage = (double) relaxAccess / population * 100;
+        double electricityPercentage = (double) electricityCount / population * 100;
+        double employmentPercentage = (double) employedCount / population * 100;
+        double joblessPercentage = (double) getUnemployedCount() / population * 100;
+        double budgetPercentage = (double) bank.getBudget() / 1000 * 100;
+        double satisfaction = (policePercentage * 0.15) + (relaxationPercentage * 0.1)
+                + (electricityPercentage * 0.15) + (employmentPercentage * 0.3) + (joblessPercentage * 0.2)
+                + (budgetPercentage * 0.1);
 
-    public int getEmployedCount() {
-        return this.employedCount;
-    }
-
-    public int getUnemployedCount() {
-        int unEmployed = this.population - this.employedCount;
-        return unEmployed <= 0 ? 0 : unEmployed;
-    }
-
-    public int getVacancyCount() {
-        int vacant = this.employedCount - this.population;
-        return vacant <= 0 ? 0 : vacant;
-    }
-
-    public int getSatisfaction() {
-        // calculate based on unemployed count, electricity-access count, police, stadium access count, budget
-        //satisfaction = (getEmployedCount() * 0.3) + (electricityScore * 0.2) +
-        //               (safetyAccess * 0.2) + (relaxAccess * 0.2) +
-        //               (getBudget() * 0.1);
-        return 100;
-    }
-
-    public String getDateTime() {
-        return datetime.getDate();
+        return (double) Math.round(satisfaction * 100) / 100;
     }
 
     public void timeGone() {
@@ -519,6 +496,25 @@ public class City {
     public String getModifiedDate() { return this.lastModifiedDate; }
     public int getBudget() { return this.bank.getBudget(); }
     public Bank getBank() { return new Bank(this.bank); }
+    public int getTotalBuilding() { return buildings.size(); }
+    public int getElectricityCount() { return electricityCount; }
+    public int getResidentialZoneCount() { return residentialZoneCount; }
+    public int getServiceIndustrialZoneCount() { return serviceIndustrialZoneCount; }
+    public int getTotalRoad() { return roads.size(); }
+    public String getDateTime() { return datetime.getDate(); }
+    public int getElectricityPopulation() { return electricityPopulation; }
+    public int getPopulation() { return this.population; }
+    public static int reimbursement(int price) { return (int) (price * 0.5); }
+    public int getEmployedCount() { return this.employedCount; }
+    public List<Zone> getZones() { return this.zones; }
+    public int getUnemployedCount() {
+        int unEmployed = this.population - this.employedCount;
+        return unEmployed <= 0 ? 0 : unEmployed;
+    }
+    public int getVacancyCount() {
+        int vacant = this.vacantCount - this.employedCount;
+        return vacant <= 0 ? 0 : vacant;
+    }
     public void setModifiedDate() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         this.lastModifiedDate = formatter.format(new Date());
