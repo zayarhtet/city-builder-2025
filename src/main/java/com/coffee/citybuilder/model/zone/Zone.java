@@ -8,6 +8,7 @@ public class Zone {
     protected int numOfPeople;
     protected CellItem ct;
     private boolean canWork = false;
+    private boolean hasElectricity = false;
     public Zone(Position p) {
         location = new Position(p);
     }
@@ -18,4 +19,6 @@ public class Zone {
     public Position getLocation() { return this.location; }
     public void setCanWork(boolean value){ this.canWork = value; }
     public boolean getCanWork(){ return this.canWork; }
+    public boolean isHasElectricity(){ return hasElectricity; }
+    public void setHasElectricity(boolean value){ this.hasElectricity = value; }
 }

@@ -38,6 +38,9 @@ public class InGameButtonPanel extends JPanel {
         JButton botRightRoadBtn = new InGameButton("resource/bot-right-road.png", CellItem.JUNCTION_ROAD);
         add(botRightRoadBtn);
 
+        JButton transmissionBtn = new InGameButton("resource/Trans.png", CellItem.TRANSMISSION_LINE);
+        add(transmissionBtn);
+
         JButton disasterBtn = new InGameButton("resource/disaster.png",CellItem.DISASTER);
         add(disasterBtn);
 

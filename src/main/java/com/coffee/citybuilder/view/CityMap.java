@@ -33,12 +33,15 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             Map.entry(CellItem.POLICE_DEPARTMENT, ResourceLoader.loadImage("resource/pd.png")),
             Map.entry(CellItem.R_CAR, ResourceLoader.loadImage("resource/right-car.png")),
             Map.entry(CellItem.D_CAR, ResourceLoader.loadImage("resource/down-car.png")),
+
             Map.entry(CellItem.L_CAR, ResourceLoader.loadImage("resource/left-car.png")),
             Map.entry(CellItem.T_CAR, ResourceLoader.loadImage("resource/top-car.png")),
             Map.entry(CellItem.POWER_PLANT, ResourceLoader.loadImage("resource/pp.png")),
             Map.entry(CellItem.STADIUM, ResourceLoader.loadImage("resource/stadium-2.png")),
             Map.entry(CellItem.RESIDENTIAL, ResourceLoader.loadImage("resource/residential-2.png")),
-            Map.entry(CellItem.SERVICE_INDUSTRIAL, ResourceLoader.loadImage("resource/factory-2.png"))
+            Map.entry(CellItem.SERVICE_INDUSTRIAL, ResourceLoader.loadImage("resource/factory-2.png")),
+            Map.entry(CellItem.TRANSMISSION_LINE, ResourceLoader.loadImage("resource/Trans.png"))
+//            entry(CellItem.POWER_PLANT, ResourceLoader.loadImage("resource/powerplant-21.png")),
             // you can add many graphic as you want
     );
 
@@ -85,6 +88,12 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
                         img = graphics.get(CellItem.V_ROAD); break;
                     case JUNCTION_ROAD:
                         img = graphics.get(CellItem.JUNCTION_ROAD); break;
+                    case H_TL:
+                        img = graphics.get(CellItem.H_TL); break;
+                    case V_TL:
+                        img = graphics.get(CellItem.V_TL); break;
+                    case J_TL:
+                        img = graphics.get(CellItem.J_TL); break;
                     case TRANSMISSION_LINE:
                         img = graphics.get(CellItem.TRANSMISSION_LINE); break;
                 }
@@ -229,6 +238,11 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             case POLICE_DEPARTMENT:
             case POWER_PLANT:
                 city.constructBuilding(em.getPosition(),em.getCellItem()); break;
+            case J_TL:
+            case H_TL:
+            case V_TL:
+            case TRANSMISSION_LINE:
+                city.buildTransmissionLine(em.getPosition(),em.getCellItem()); break;
             case DEL_OPT:
                 city.demolish(em.getPosition()); break;
             case DISASTER:
