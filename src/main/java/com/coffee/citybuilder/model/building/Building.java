@@ -13,6 +13,7 @@ public class Building {
     private List<Building> connections;
     private List<Position> location;
     protected CellItem ct;
+    private int quota = 50;
     public Building(List<Position> locations){
         this.location = new ArrayList<>(locations);
     }
@@ -34,4 +35,10 @@ public class Building {
     public CellItem getCt() { return ct; }
     public boolean isHasElectricity(){ return hasElectricity; }
     public void setHasElectricity(boolean value){ this.hasElectricity = value; }
+    public void Share(int value){ this.quota -= value; }
+    public void resetQuota() { this.quota = 50; }
+    public boolean canShare(int value) {
+        //System.out.println("Left "+ quota+" Ask "+value);
+        return this.quota >= value;
+    }
 }
