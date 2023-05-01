@@ -7,7 +7,8 @@ public class DateTime {
     private int hour;
     private int minute;
     private int second;
-
+    private boolean monthGone = false;
+    private boolean yearGone = false;
     private String currentDateString;
 
     public DateTime() {
@@ -22,7 +23,6 @@ public class DateTime {
         this.minute = minute;
         this.second = second;
         this.refreshDateString();
-        System.out.println("Called");
     }
 
     private void refreshDateString() {
@@ -36,28 +36,25 @@ public class DateTime {
     }
 
     public void timeMove() {
-        this.second++;
-        if (this.second >= 60) {
-            this.minute++;
-            this.second = 0;
-            if (this.minute >= 60) {
-                this.hour++;
-                this.minute = 0;
-                if (this.hour >= 24) {
-                    this.day++;
-                    this.hour = 1;
-                    if (this.day > getMaxDay()) {
-                        this.month++;
-                        this.day = 1;
-                        if (this.month > 12) {
-                            year++;
-                            this.month = 1;
-                        }
+        this.minute++;
+        if (this.minute >= 60) {
+            this.hour++;
+            this.minute = 0;
+            if (this.hour >= 24) {
+                this.day++;
+                this.hour = 0;
+                if (this.day > getMaxDay()) {
+                    this.month++;
+                    this.day = 1;
+                    if (this.month > 12) {
+                        year++;
+                        this.month = 1;
+                        yearGone = true;
                     }
                 }
             }
-            refreshDateString();
         }
+        refreshDateString();
     }
 
     public int getMaxDay() {
@@ -80,5 +77,8 @@ public class DateTime {
         }
         return 0;
     }
+
+    public boolean isYearEnd() { return this.yearGone; }
+    public void doneYearEnd() { this.yearGone = false; }
 
 }

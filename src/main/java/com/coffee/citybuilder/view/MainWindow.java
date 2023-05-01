@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import com.coffee.citybuilder.model.City;
 import com.coffee.citybuilder.model.Game;
+import com.coffee.citybuilder.model.budget.Bank;
 import com.coffee.citybuilder.view.component.*;
 
 import java.awt.*;
@@ -17,6 +18,8 @@ import java.net.URL;
 public class MainWindow extends JFrame {
     private MenuPanel           menu;
     private LoadGamePanel       loadGamePanel;
+    private TransactionPanel    transactionPanel;
+    private CensusPanel         censusPanel;
     private StatisticPanel      statisticPanel;
     private InGameButtonPanel   buttonPanel;
     private CityMap             map;
@@ -33,22 +36,21 @@ public class MainWindow extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                inGameTimer.stop();
                 ExitConfirmationDialog dialog = new ExitConfirmationDialog();
                 if (dialog.isConfirmed()) {
                     game.saveCities();
                     dispose();
                     System.exit(0);
                 }
+                inGameTimer.start();
             }
         });
         String path = "resource/player.png";
         URL url = MainWindow.class.getClassLoader().getResource(path);
-        System.out.println(url.toString());
         setIconImage(Toolkit.getDefaultToolkit().getImage(url));
         setLayout(new BorderLayout(0, 2));
 
-        // theme
-        Color menuButtonColor = new Color(0, 90, 255);
         this.game = new Game();
 
         try { add(menu = new MenuPanel(this), BorderLayout.CENTER); } catch (IOException e) {}
@@ -61,7 +63,7 @@ public class MainWindow extends JFrame {
         add(buttonPanel, BorderLayout.EAST);
         buttonPanel.setVisible(false);
 
-        this.inGameTimer = new Timer(1000, e -> {
+        this.inGameTimer = new Timer(500, e -> {
             this.statisticPanel.syncLabels();
         });
         inGameTimer.start();
@@ -71,13 +73,44 @@ public class MainWindow extends JFrame {
         pack();
         setVisible(true);
     }
-
+    public void doubleSpeed() {
+        inGameTimer.stop();
+        inGameTimer.setDelay(50);
+        map.setVehicleFrameRate(2);
+        inGameTimer.start();
+    }
+    public void normalSpeed() {
+        inGameTimer.stop();
+        inGameTimer.setDelay(500);
+        map.setVehicleFrameRate(1);
+        inGameTimer.start();
+    }
     public void hideMenuPage() { menu.setVisible(false); }
     public void showMenuPage() { menu.setVisible(true); }
     public void hideMapPage() { map.setVisible(false); statisticPanel.setVisible(false); buttonPanel.setVisible(false); inGameTimer.stop(); }
     public void showMapPage() { map.setVisible(true); statisticPanel.setVisible(true); buttonPanel.setVisible(true); inGameTimer.start(); }
     public void showLoadGamePage() { loadGamePanel.setVisible(true); }
     public void hideLoadGamePage() { loadGamePanel.setVisible(false); }
+    public void showTransactionPage(Bank bank) {
+        if (transactionPanel == null) {
+            add(this.transactionPanel = new TransactionPanel(bank, this), BorderLayout.CENTER);
+        }
+        transactionPanel.syncTable(bank);
+        transactionPanel.setVisible(true);
+    }
+    public void showCensusPage(City city) {
+        if (censusPanel == null) {
+            add(this.censusPanel = new CensusPanel(this), BorderLayout.CENTER);
+        }
+        censusPanel.syncCensus(city);
+        censusPanel.setVisible(true);
+    }
+    public void hideTransactionPage() {
+        transactionPanel.setVisible(false);
+    }
+    public void hideCensusPage() {
+        censusPanel.setVisible(false);
+    }
     public void instantiateLoadGame() {
         if (loadGamePanel == null) {
             add(loadGamePanel = new LoadGamePanel(this.game.getAllCities(),  this));

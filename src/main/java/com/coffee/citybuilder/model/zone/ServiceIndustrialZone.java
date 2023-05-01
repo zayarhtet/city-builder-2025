@@ -8,6 +8,5 @@ import static com.coffee.citybuilder.resource.Constant.Initial_Employee;
 public class ServiceIndustrialZone extends Zone {
     public ServiceIndustrialZone(Position p) {
         super(p); super.ct = CellItem.SERVICE_INDUSTRIAL;
-        super.numOfPeople = Initial_Employee;
     }
 }
