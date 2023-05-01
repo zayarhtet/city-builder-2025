@@ -368,7 +368,7 @@ public class City {
                     if (p.canShare(b.getCt().electricityDemand)) {
                         p.Share(b.getCt().electricityDemand);
                         b.setHasElectricity(true);
-                        System.out.println(b.getCt() + " has Electricity "+b.getCt().electricityDemand);
+                        //System.out.println(b.getCt() + " has Electricity "+b.getCt().electricityDemand);
                     }
                 }
 
@@ -383,7 +383,8 @@ public class City {
                     if (p.canShare(z.getCt().electricityDemand)) {
                         p.Share(z.getCt().electricityDemand);
                         z.setHasElectricity(true);
-                        System.out.println(z.getCt() + " has Electricity "+z.getCt().electricityDemand);
+                        //System.out.println(z.getCt() + " has Electricity "+z.getCt().electricityDemand);
+                        //System.out.println(z.getCt() + " has Electricity "+z.getCt().electricityDemand);
                     }
 
                 }
