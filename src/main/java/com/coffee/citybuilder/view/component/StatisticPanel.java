@@ -3,6 +3,7 @@ import java.awt.*;
 import java.net.URL;
 import javax.swing.*;
 
+import com.coffee.citybuilder.model.CellItem;
 import com.coffee.citybuilder.model.City;
 import com.coffee.citybuilder.view.MainWindow;
 
@@ -88,7 +89,7 @@ public class StatisticPanel extends JPanel {
         censusButton.setBackground(MainWindow.BG_COLOR);
         censusButton.setForeground(MainWindow.THEME);
 
-        url = InGameButtonPanel.class.getClassLoader().getResource("resource/banking.png");
+        url = InGameButtonPanel.class.getClassLoader().getResource("resource/census.png");
         element = Toolkit.getDefaultToolkit().getImage(url);
         icon = new ImageIcon(element.getScaledInstance( 30, 30,  java.awt.Image.SCALE_SMOOTH ));
         censusButton.setContentAreaFilled(false);
@@ -107,7 +108,7 @@ public class StatisticPanel extends JPanel {
         speedBtn.setBackground(MainWindow.BG_COLOR);
         speedBtn.setForeground(MainWindow.THEME);
 
-        url = InGameButtonPanel.class.getClassLoader().getResource("resource/banking.png");
+        url = InGameButtonPanel.class.getClassLoader().getResource("resource/speed.png");
         element = Toolkit.getDefaultToolkit().getImage(url);
         icon = new ImageIcon(element.getScaledInstance( 30, 30,  java.awt.Image.SCALE_SMOOTH ));
         speedBtn.setContentAreaFilled(false);
@@ -125,6 +126,11 @@ public class StatisticPanel extends JPanel {
                 isOn = false;
             }
         });
+
+        JButton infoBtn = new InGameButton("resource/info.png", CellItem.INFO);
+        infoBtn.setBounds(325,5,50,40);
+
+        add(infoBtn);
     }
 
     public void setCity(City city) {

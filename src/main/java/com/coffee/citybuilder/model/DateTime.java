@@ -6,23 +6,19 @@ public class DateTime {
     private int day;
     private int hour;
     private int minute;
-    private int second;
-    private boolean monthGone = false;
     private boolean yearGone = false;
     private String currentDateString;
-    private int pensionCount = 0;
 
     public DateTime() {
-        this(2025, 1, 1, 0, 0, 0);
+        this(2025, 1, 1, 0, 0);
     }
 
-    public DateTime(int year, int month, int day, int hour, int minute, int second) {
+    public DateTime(int year, int month, int day, int hour, int minute) {
         this.year = year;
         this.month = month;
         this.day = day;
         this.hour = hour;
         this.minute = minute;
-        this.second = second;
         this.refreshDateString();
     }
 
@@ -32,7 +28,6 @@ public class DateTime {
     }
 
     public String getDate() {
-        System.out.println(currentDateString + ":" + this.second);
         return currentDateString;
     }
 
@@ -74,6 +69,7 @@ public class DateTime {
             case 11:
                 return 30;
             case 2:
+//                if (isLeapYear(year)) return 29;
                 return 28;
         }
         return 0;
@@ -81,12 +77,4 @@ public class DateTime {
 
     public boolean isYearEnd() { return this.yearGone; }
     public void doneYearEnd() { this.yearGone = false; }
-    public boolean fortyYears() {
-
-        if (pensionCount == 40)  {
-            pensionCount = 0;
-            return true;
-        }
-        return false;
-    }
 }

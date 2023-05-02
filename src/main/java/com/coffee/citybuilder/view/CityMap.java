@@ -6,8 +6,10 @@ import javax.swing.Timer;
 import com.coffee.citybuilder.model.*;
 import com.coffee.citybuilder.model.building.Building;
 import com.coffee.citybuilder.model.zone.Zone;
+import com.coffee.citybuilder.model.zone.ZoneInfo;
 import com.coffee.citybuilder.resource.ResourceLoader;
 import com.coffee.citybuilder.view.component.EventModel;
+import com.coffee.citybuilder.view.component.InfoDialog;
 import com.coffee.citybuilder.view.component.Vehicle;
 
 import java.awt.*;
@@ -228,14 +230,17 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         anim.SetUp(d,ds);
     }
 
+    public void info(Position p) {
+        if(city.getCellItem(p.y,p.x) != CellItem.RESIDENTIAL) return;
+        ZoneInfo message = city.getZoneInfo(p);
+        new InfoDialog(message);
+    }
 
     // MouseListener
     @Override
     public void mouseClicked(MouseEvent e) {
         if (EventModel.isFree()) return;
         EventModel em = EventModel.getEventModelInstance();
-        // check if the target is occupied
-        // check what needs to be built with em.getCellItem() and with Switch case and call respective methods from city.
         switch (em.getCellItem()){
             case RESIDENTIAL:
             case SERVICE_INDUSTRIAL:
@@ -259,6 +264,8 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
                 if(!anim.isAnimating()){
                     initDisaster(em); break;
                 }
+            case INFO:
+                info(em.getPosition()); break;
             default:
                 break;
         }

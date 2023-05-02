@@ -27,8 +27,6 @@ public class MenuPanel extends JPanel {
 
         JButton newGameButton = new MenuButton("New Game");
         newGameButton.addActionListener(e -> {
-            //TODO dialog box here, should The variable(gameName) be extended?
-            //TODO should it be wraped in try catch?
             String gameName = "";
 
             InputDialog idialog = new InputDialog();

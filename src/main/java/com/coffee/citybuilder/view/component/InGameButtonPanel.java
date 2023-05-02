@@ -46,5 +46,6 @@ public class InGameButtonPanel extends JPanel {
 
         JButton deleteBtn = new InGameButton("resource/delete.png",CellItem.DEL_OPT);
         add(deleteBtn);
+
     }
 }

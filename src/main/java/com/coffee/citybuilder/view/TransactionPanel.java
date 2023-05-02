@@ -97,15 +97,5 @@ public class TransactionPanel extends JPanel {
         }
 
         budgetLabel.setText("Budget: " + this.bank.getBudget());
-
-        // Color the rows based on the type of data (income or expense)
-//        for (int i = 0; i < table.getRowCount(); i++) {
-//            int amount = (int) table.getValueAt(i, 2);
-//            if (amount < 0) {
-//                table.setSelectionBackground(Color.RED);
-//            } else {
-//                table.setSelectionBackground(Color.GREEN);
-//            }
-//        }
     }
 }

@@ -25,13 +25,13 @@ public class DatetimeTest {
     // Test when new month
     // Test when new year
 
-    private DateTime getDatetime(int year, int month, int day, int hour, int minute, int second) {
-        return new DateTime(year, month, day, hour, minute, second);
+    private DateTime getDatetime(int year, int month, int day, int hour, int minute) {
+        return new DateTime(year, month, day, hour, minute);
     }
 
     @Test
     public void test_OverloadSecond() {
-        DateTime datetime = getDatetime(year, month, day, hour, 58, 58);
+        DateTime datetime = getDatetime(year, month, day, hour, 58);
         datetime.timeMove();
         assertEquals("2023.12.31 23:59", datetime.getDate());
 
@@ -39,7 +39,7 @@ public class DatetimeTest {
 
     @Test
     public void test_OverloadMinute() {
-        DateTime datetime = getDatetime(year, month, day, hour, 58, second);
+        DateTime datetime = getDatetime(year, month, day, hour, 58);
         datetime.timeMove();
         assertEquals("2023.12.31 23:59", datetime.getDate());
 
@@ -47,7 +47,7 @@ public class DatetimeTest {
 
     @Test
     public void test_OverloadHour() {
-        DateTime datetime = getDatetime(year, month, day, 22, minute, second);
+        DateTime datetime = getDatetime(year, month, day, 22, minute);
         datetime.timeMove();
         //
         assertEquals("2023.12.31 23:00", datetime.getDate());
@@ -56,7 +56,7 @@ public class DatetimeTest {
 
     @Test
     public void test_OverloadDay() {
-        DateTime datetime = getDatetime(year, month, 30, hour, minute, second);
+        DateTime datetime = getDatetime(year, month, 30, hour, minute);
         datetime.timeMove();
         assertEquals("2023.12.31 00:00", datetime.getDate());
 
@@ -64,7 +64,7 @@ public class DatetimeTest {
 
     @Test
     public void test_OverloadMonth() {
-        DateTime datetime = getDatetime(year, month, day, hour, minute, second);
+        DateTime datetime = getDatetime(year, month, day, hour, minute);
         datetime.timeMove();
         assertEquals("2024.01.01 00:00", datetime.getDate());
 
@@ -72,7 +72,7 @@ public class DatetimeTest {
 
     @Test
     public void test_OverloadYear() {
-        DateTime datetime = getDatetime(year, month, day, hour, minute, second);
+        DateTime datetime = getDatetime(year, month, day, hour, minute);
         datetime.timeMove();
         assertEquals("2024.01.01 00:00", datetime.getDate());
 

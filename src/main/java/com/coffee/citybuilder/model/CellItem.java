@@ -18,6 +18,7 @@ public enum CellItem {
     L_CAR(0, 1),
     T_CAR(0, 1),
     DEL_OPT(0,0),
+    INFO (0,0),
     DISASTER(0,0);
     public final int price;
     public final int tiles;

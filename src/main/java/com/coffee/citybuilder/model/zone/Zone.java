@@ -1,11 +1,17 @@
 package com.coffee.citybuilder.model.zone;
 
 import com.coffee.citybuilder.model.CellItem;
+import com.coffee.citybuilder.model.Citizen;
 import com.coffee.citybuilder.model.Position;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class Zone {
     private Position location;
     protected int numOfPeople;
+    protected List<Citizen> citizens;
+    protected int pensionerCount;
     protected CellItem ct;
     private boolean canWork = false;
     private int workerCapacity = 40;
@@ -23,10 +29,22 @@ public class Zone {
     public boolean isHasElectricity(){ return hasElectricity; }
     public void setHasElectricity(boolean value){ this.hasElectricity = value; }
     public void increaseWorkers(int value){
-//        if (numOfPeople == workerCapacity) return false;
         numOfPeople = Math.min(numOfPeople+value,workerCapacity);
-//        return true;
     }
+    public void increaseAge() {
+        Iterator it = citizens.iterator();
+        pensionerCount = 0;
+        while (it.hasNext()) {
+            Citizen c = (Citizen) it.next();
+            c.increaseAge();
+            if (!c.isAlive()) {
+                it.remove();
+                numOfPeople--;
+            }
+            if (c.isPensioner()) pensionerCount++;
+        }
+    }
+    public int getPensionerCount() { return pensionerCount; }
     public void decreaseWorkers() { numOfPeople = 0; }
     public int getWorkerCapacity() { return workerCapacity; }
 }

@@ -11,6 +11,7 @@ import com.coffee.citybuilder.model.building.Stadium;
 import com.coffee.citybuilder.model.zone.ResidentialZone;
 import com.coffee.citybuilder.model.zone.ServiceIndustrialZone;
 import com.coffee.citybuilder.model.zone.Zone;
+import com.coffee.citybuilder.model.zone.ZoneInfo;
 
 import javax.sound.midi.SysexMessage;
 
@@ -40,6 +41,7 @@ public class City {
     private int vacantCount = 0;
     private int residentialZoneCount = 0;
     private int serviceIndustrialZoneCount = 0;
+    private int pensionerCount = 0;
 
     public City(String username) {
         this.id = UUID.randomUUID().toString();
@@ -96,6 +98,7 @@ public class City {
         }
         refreshConnection();
         supplyElectricity();
+        calculateServiceAccess();
     }
 
     public void constructBuilding(Position p, CellItem c) {
@@ -136,6 +139,7 @@ public class City {
                 break;
         }
         supplyElectricity();
+        calculateServiceAccess();
     }
 
     public void demolish(Position p) {
@@ -167,6 +171,7 @@ public class City {
         }
         refreshConnection();
         supplyElectricity();
+        calculateServiceAccess();
         setModifiedDate();
     }
 
@@ -192,10 +197,7 @@ public class City {
         CellItem ct = cells[p.y][p.x];
         for (Zone z : zones) {
             System.out.println(z.getLocation().toString());
-            if (isConnected(p, z.getLocation())) {
-                System.out.println("HELLOWORLD!");
-                return;
-            }
+            if (isConnected(p, z.getLocation())) { return; }
         }
         cells[p.y][p.x] = CellItem.GENERAL;
         roads.remove(p);
@@ -265,18 +267,11 @@ public class City {
     }
 
     private boolean isConnected(Position start, Position end) {
-
-//        if (cells[start.y][start.x] == cells[end.y][end.x])
-//            return false;
         CellItem ctStart = cells[start.y][start.x];
         CellItem ctEnd = cells[end.y][end.x];
         List<CellItem> cts = new ArrayList<>(); cts.add(CellItem.H_ROAD); cts.add(CellItem.V_ROAD); cts.add(CellItem.JUNCTION_ROAD);
         cts.add(CellItem.RESIDENTIAL); cts.add(CellItem.SERVICE_INDUSTRIAL);
         if (!cts.contains(ctStart) || !cts.contains(ctEnd)) return false;
-//        if (cells[start.y][start.x] != CellItem.RESIDENTIAL && cells[start.y][start.x] != CellItem.SERVICE_INDUSTRIAL)
-//            return false;
-//        if (cells[end.y][end.x] != CellItem.RESIDENTIAL && cells[end.y][end.x] != CellItem.SERVICE_INDUSTRIAL)
-//            return false;
 
         boolean[][] visited = new boolean[row][col];
         visited[start.y][start.x] = true;
@@ -289,11 +284,7 @@ public class City {
             int y = curr[0];
             int x = curr[1];
 
-            if (Math.abs(y - end.y) + Math.abs(x - end.x) == 1) {
-                return true;
-            }
-
-            // check adjacent cells
+            if (Math.abs(y - end.y) + Math.abs(x - end.x) == 1) { return true; }
 
             if (y > 0 && isVRoad(y - 1, x) && !visited[y - 1][x]) {
                 visited[y - 1][x] = true;
@@ -312,7 +303,6 @@ public class City {
                 queue.add(new int[]{y, x + 1});
             }
         }
-
         return false;
     }
 
@@ -373,9 +363,7 @@ public class City {
                 visited[y+1][x+1] = true;
                 queue.add(new int[]{y+1,x+1});
             }
-
         }
-
         return false;
     }
 
@@ -397,7 +385,6 @@ public class City {
                         p.Share(b.getCt().electricityDemand);
                         b.setHasElectricity(true);
                         electricityCount++;
-                        //System.out.println(b.getCt() + " has Electricity "+b.getCt().electricityDemand);
                     }
                 }
             }
@@ -411,14 +398,11 @@ public class City {
                         if (z.getCt() == CellItem.RESIDENTIAL) {
                             electricityPopulation += z.getPopulation();
                         }
-                        //System.out.println(z.getCt() + " has Electricity "+z.getCt().electricityDemand);
-                        //System.out.println(z.getCt() + " has Electricity "+z.getCt().electricityDemand);
                     }
                 }
             }
         }
     }
-
     public Disaster spawnDisaster() {
         Random r = new Random();
         int i = r.nextInt(1);
@@ -428,19 +412,17 @@ public class City {
         double d = Math.sqrt((a.y - b.y) * (a.y - b.y) + (a.x - b.x) * (a.x - b.x));
         return (int) Math.ceil(d);
     }
-
     private boolean withinRadius(Position p, int radius, CellItem ct) {
         Position rows = new Position(Math.max(p.y - radius, 0), Math.min(p.y + radius, row));
         Position columns = new Position(Math.max(p.x - radius, 0), Math.min(p.x + radius, col));
 
         for (int r = rows.x; r <= rows.y; r++) {
             for (int c = columns.x; c <= columns.y; c++) {
-                if (getCellItem(r, c) == ct && distance(new Position(r, c), p) <= radius) { return true; }
+                if (getCellItem(r, c) == ct) { return true; }
             }
         }
         return false;
     }
-
     private void calculateServiceAccess() {
         this.safetyAccess = this.relaxAccess = 0;
 
@@ -449,16 +431,11 @@ public class City {
                 if (withinRadius(z.getLocation(), PoliceDepartment.radius, CellItem.POLICE_DEPARTMENT)) {
                     safetyAccess += z.getPopulation();
                 }
-                //relaxAccess No radius?
+                if (withinRadius(z.getLocation(), PoliceDepartment.radius, CellItem.STADIUM)) {
+                    relaxAccess += z.getPopulation();
+                }
             }
         }
-    }
-    public double getSatisfactionNew() {
-        double totalSatisfied = safetyAccess + relaxAccess + 0.5 * electricityPopulation + 0.5 * employedCount;
-        double totalUnsatisfied = population - totalSatisfied - getUnemployedCount();
-        double budgetSatisfaction = (bank.getBudget() >= 0) ? 1.0 : 0.0;
-        double sat = 100.0 * (totalSatisfied + budgetSatisfaction - getUnemployedCount()) / population;
-        return (double) Math.round(sat * 100) / 100;
     }
     public double getSatisfaction() {
         double policePercentage = (double) safetyAccess / population * 100;
@@ -473,14 +450,26 @@ public class City {
 
         return (double) Math.round(satisfaction * 100) / 100;
     }
-
+    public ZoneInfo getZoneInfo(Position p) {
+        // search p inside zones and obtain Zone object
+        // calculate the following values
+        return new ZoneInfo(4,5,6,3,true,true, true);
+    }
     public void timeGone() {
         datetime.timeMove();
         setModifiedDate();
         if (datetime.isYearEnd()) {
+            pensionerCount = 0;
+            population = 0;
+            for(Zone z: zones) {
+                z.increaseAge();
+                pensionerCount += z.getPensionerCount();
+                population += z.getPopulation();
+            }
             collectTax();
             payPension();
             spendMaintenanceFee();
+            refreshConnection();
             datetime.doneYearEnd();
         }
     }
@@ -488,10 +477,7 @@ public class City {
         bank.earn("Taxation from Industries", (int)(employedCount*0.2));
     }
     private void payPension() {
-//        if (datetime.fortyYears()) {
-            int pensionerCount = new Random().nextInt((int)(population*0.1));
             bank.cost("Pension", pensionerCount*3 );
-//        }
     }
     private void spendMaintenanceFee() {
         bank.cost("Building Maintenance", buildings.size()*1);
