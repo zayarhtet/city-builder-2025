@@ -196,7 +196,6 @@ public class City {
     public void deleteRoad(Position p) {
         CellItem ct = cells[p.y][p.x];
         for (Zone z : zones) {
-            System.out.println(z.getLocation().toString());
             if (isConnected(p, z.getLocation())) { return; }
         }
         cells[p.y][p.x] = CellItem.GENERAL;
@@ -416,8 +415,8 @@ public class City {
         Position rows = new Position(Math.max(p.y - radius, 0), Math.min(p.y + radius, row));
         Position columns = new Position(Math.max(p.x - radius, 0), Math.min(p.x + radius, col));
 
-        for (int r = rows.x; r <= rows.y; r++) {
-            for (int c = columns.x; c <= columns.y; c++) {
+        for (int r = rows.x; r < rows.y; r++) {
+            for (int c = columns.x; c < columns.y; c++) {
                 if (getCellItem(r, c) == ct) { return true; }
             }
         }
