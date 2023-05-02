@@ -190,6 +190,13 @@ public class City {
 
     public void deleteRoad(Position p) {
         CellItem ct = cells[p.y][p.x];
+        for (Zone z : zones) {
+            System.out.println(z.getLocation().toString());
+            if (isConnected(p, z.getLocation())) {
+                System.out.println("HELLOWORLD!");
+                return;
+            }
+        }
         cells[p.y][p.x] = CellItem.GENERAL;
         roads.remove(p);
         bank.earn("Demolish Road", reimbursement(ct.price));
@@ -259,12 +266,17 @@ public class City {
 
     private boolean isConnected(Position start, Position end) {
 
-        if (cells[start.y][start.x] == cells[end.y][end.x])
-            return false;
-        if (cells[start.y][start.x] != CellItem.RESIDENTIAL && cells[start.y][start.x] != CellItem.SERVICE_INDUSTRIAL)
-            return false;
-        if (cells[end.y][end.x] != CellItem.RESIDENTIAL && cells[end.y][end.x] != CellItem.SERVICE_INDUSTRIAL)
-            return false;
+//        if (cells[start.y][start.x] == cells[end.y][end.x])
+//            return false;
+        CellItem ctStart = cells[start.y][start.x];
+        CellItem ctEnd = cells[end.y][end.x];
+        List<CellItem> cts = new ArrayList<>(); cts.add(CellItem.H_ROAD); cts.add(CellItem.V_ROAD); cts.add(CellItem.JUNCTION_ROAD);
+        cts.add(CellItem.RESIDENTIAL); cts.add(CellItem.SERVICE_INDUSTRIAL);
+        if (!cts.contains(ctStart) || !cts.contains(ctEnd)) return false;
+//        if (cells[start.y][start.x] != CellItem.RESIDENTIAL && cells[start.y][start.x] != CellItem.SERVICE_INDUSTRIAL)
+//            return false;
+//        if (cells[end.y][end.x] != CellItem.RESIDENTIAL && cells[end.y][end.x] != CellItem.SERVICE_INDUSTRIAL)
+//            return false;
 
         boolean[][] visited = new boolean[row][col];
         visited[start.y][start.x] = true;
@@ -476,8 +488,10 @@ public class City {
         bank.earn("Taxation from Industries", (int)(employedCount*0.2));
     }
     private void payPension() {
-        int pensionerCount = new Random().nextInt((int)(population*0.1));
-        bank.cost("Pension", pensionerCount*3 );
+//        if (datetime.fortyYears()) {
+            int pensionerCount = new Random().nextInt((int)(population*0.1));
+            bank.cost("Pension", pensionerCount*3 );
+//        }
     }
     private void spendMaintenanceFee() {
         bank.cost("Building Maintenance", buildings.size()*1);

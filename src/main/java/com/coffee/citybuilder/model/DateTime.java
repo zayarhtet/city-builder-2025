@@ -10,6 +10,7 @@ public class DateTime {
     private boolean monthGone = false;
     private boolean yearGone = false;
     private String currentDateString;
+    private int pensionCount = 0;
 
     public DateTime() {
         this(2025,1,1,0,0,0);
@@ -74,5 +75,12 @@ public class DateTime {
 
     public boolean isYearEnd() { return this.yearGone; }
     public void doneYearEnd() { this.yearGone = false; }
+    public boolean fortyYears() {
 
+        if (pensionCount == 40)  {
+            pensionCount = 0;
+            return true;
+        }
+        return false;
+    }
 }
