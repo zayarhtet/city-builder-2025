@@ -11,9 +11,10 @@ import org.junit.Test;
 
 import com.coffee.citybuilder.model.City;
 import com.coffee.citybuilder.persistence.Database;
-// DONE
+
 public class DatabaseTest {
     private Database db = new Database();
+
     @Test
     public void testIfFileCreated() {
         db.loadData();
@@ -21,13 +22,14 @@ public class DatabaseTest {
         File f = new File(PATH);
         assert f.exists() && !f.isDirectory();
     }
+
     @Test
-    public void testIfCityCanBeSaved(){
+    public void testIfCityCanBeSaved() {
         // reading cities
         String name = "TempCityForTestClass";
         List<City> citiesTemp = db.loadData();
         List<City> citiesNotModified = new ArrayList<>(citiesTemp);
-        //add temporary city
+        // add temporary city
         City tempCity = new City(name);
         citiesTemp.add(tempCity);
         db.saveData(citiesTemp);
@@ -39,7 +41,8 @@ public class DatabaseTest {
             City city = (City) iter.next();
             if (city.getUsername().equals(name)) {
                 found = true;
-            };
+            }
+            ;
         }
         // cleanup
         db.saveData(citiesNotModified);

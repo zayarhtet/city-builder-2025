@@ -4,4 +4,5 @@ out/
 src/main/java/com/coffee/citybuilder/resource/database/userdata.json
 .DS_Store
 target
+features.md
 userdata.json
