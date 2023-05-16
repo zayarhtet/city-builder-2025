@@ -429,9 +429,11 @@ public class City {
             if (z.getCt() == CellItem.RESIDENTIAL) {
                 if (withinRadius(z.getLocation(), PoliceDepartment.radius, CellItem.POLICE_DEPARTMENT)) {
                     safetyAccess += z.getPopulation();
+                    z.setHasPolice(true);
                 }
                 if (withinRadius(z.getLocation(), PoliceDepartment.radius, CellItem.STADIUM)) {
                     relaxAccess += z.getPopulation();
+                    z.setHasStadium(true);
                 }
             }
         }
@@ -439,7 +441,7 @@ public class City {
     public double getSatisfaction() {
         double policePercentage = (double) safetyAccess / population * 100;
         double relaxationPercentage = (double) relaxAccess / population * 100;
-        double electricityPercentage = (double) electricityCount / population * 100;
+        double electricityPercentage = (double) electricityPopulation / population * 100;
         double employmentPercentage = (double) employedCount / population * 100;
         double joblessPercentage = (double) getUnemployedCount() / population * 100;
         double budgetPercentage = (double) bank.getBudget() / 1000 * 100;
@@ -452,7 +454,50 @@ public class City {
     public ZoneInfo getZoneInfo(Position p) {
         // search p inside zones and obtain Zone object
         // calculate the following values
-        return new ZoneInfo(4,5,6,3,true,true, true);
+        Zone b = null;
+        for (Zone a : zones) {
+            if (a.getLocation().equals(p)) b = a;
+        }
+
+        int dist = 100;
+        for (Zone c : zones) {
+            if (c.getCt() == CellItem.SERVICE_INDUSTRIAL) {
+                dist = Math.min(dist, distance(b.getLocation(), c.getLocation()));
+            }
+        }
+
+        double populationWeight = 0.10;
+        double policeCoverageWeight = 0.20;
+        double stadiumAccessWeight = 0.15;
+        double electricityAccessWeight = 0.15;
+        double distanceToWorkWeight = 0.20;
+        double pensionerCountWeight = 0.10;
+        double employedWeight = 0.10;
+
+        // Normalize attribute values to a percentage scale (0-100)
+        double populationNormalized = normalizeValue(b.getPopulation(), 0, 1000000);
+        double distanceToWorkNormalized = normalizeValue(dist, 0, 100);
+        double pensionerCountNormalized = normalizeValue(b.getPensionerCount(), 0, 100);
+
+        // Calculate attribute scores
+        double populationScore = populationNormalized * populationWeight;
+        double policeCoverageScore = b.isHasPolice() ? 100 * policeCoverageWeight : 0;
+        double stadiumAccessScore = b.isHasStadium() ? 100 * stadiumAccessWeight : 0;
+        double electricityAccessScore = b.isHasElectricity() ? 100 * electricityAccessWeight : 0;
+        double distanceToWorkScore = distanceToWorkNormalized * distanceToWorkWeight;
+        double pensionerCountScore = pensionerCountNormalized * pensionerCountWeight;
+        double employedScore = b.getCanWork() ? 100 * employedWeight : 0;
+
+        // Calculate overall satisfaction score
+        double satisfactionScore = populationScore + policeCoverageScore + stadiumAccessScore + electricityAccessScore
+                + (b.getCanWork()? distanceToWorkScore: 0) + pensionerCountScore + employedScore;
+
+
+        return new ZoneInfo(b.getPopulation(), b.getPensionerCount(),satisfactionScore,b.getCanWork()? b.getPopulation(): 0,b.isHasPolice(),b.isHasStadium(), b.isHasElectricity());
+    }
+    private double normalizeValue(int value, int min, int max) {
+        // Normalize the value to a percentage scale
+        return ((double) (value - min) / (max - min)) * 100;
     }
     public void timeGone() {
         datetime.timeMove();

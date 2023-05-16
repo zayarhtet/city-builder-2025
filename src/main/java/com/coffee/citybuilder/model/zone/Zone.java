@@ -16,6 +16,8 @@ public class Zone {
     private boolean canWork = false;
     private int workerCapacity = 40;
     private boolean hasElectricity = false;
+    private boolean hasPolice = false;
+    private boolean hasStadium = false;
     public Zone(Position p) {
         location = new Position(p);
     }
@@ -27,7 +29,12 @@ public class Zone {
     public void setCanWork(boolean value){ this.canWork = value; }
     public boolean getCanWork(){ return this.canWork; }
     public boolean isHasElectricity(){ return hasElectricity; }
+    public boolean isHasPolice(){ return hasPolice; }
+    public boolean isHasStadium(){ return hasStadium; }
+
     public void setHasElectricity(boolean value){ this.hasElectricity = value; }
+    public void setHasPolice(boolean value){ this.hasPolice = value; }
+    public void setHasStadium(boolean value){ this.hasStadium = value; }
     public void increaseWorkers(int value){
         numOfPeople = Math.min(numOfPeople+value,workerCapacity);
     }
