@@ -7,6 +7,11 @@ import com.coffee.citybuilder.model.Position;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Class to store zone information on a map?
+ * 
+ * 
+ */
 public class Zone {
     private Position location;
     protected int numOfPeople;
@@ -18,12 +23,28 @@ public class Zone {
     private boolean hasElectricity = false;
     private boolean hasPolice = false;
     private boolean hasStadium = false;
+    /
     public Zone(Position p) {
         location = new Position(p);
     }
 
+    /**
+     * Used to chech which zone this is
+     * 
+     * @return CelItem emum of that zone
+     */
     public CellItem getCt() { return ct; }
+    /**
+     * Used to chekc if somenthing should be apllied to this zone?
+     * 
+     * @return boolean if this zone is at position p
+     */
     public boolean isAt(Position p) { return this.location.equals(p); }
+    /**
+     * Used when...
+     * 
+     * @return integer nubmer of people currently lnving in the zone?
+     */
     public int getPopulation() { return this.numOfPeople; }
     public Position getLocation() { return this.location; }
     public void setCanWork(boolean value){ this.canWork = value; }
