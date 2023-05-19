@@ -15,6 +15,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+
+/**
+ * Class that makes informational dialog when you click a cell
+ * 
+ * This class gets all the values that are important to the 
+ * user (Satisfaction/population/ect.) and represents them in 
+ * a visual way, wih a custom dialog box.
+ */
 public class InfoDialog extends JDialog {
     private JLabel populationLabel, pensionerCountLabel, satisfactionLabel, electricityLabel, policeLabel, employedCountLabel, stadiumLabel;
 

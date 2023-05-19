@@ -5,6 +5,10 @@ import com.coffee.citybuilder.model.Position;
 
 import java.util.List;
 
+/**
+ * Class to implement power plant functionality
+ * why?
+ */
 public class PowerPlant extends Building {
     //private int quota = 50;
     public PowerPlant(List<Position> location) {

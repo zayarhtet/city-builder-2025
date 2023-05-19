@@ -9,6 +9,13 @@ import com.coffee.citybuilder.view.component.MenuButton;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * Main menu panel that display menu items.
+ * 
+ * This classdraws the menu GUI, by initiaizing buttons,
+ *  which let the user start a new game, load a previuos 
+ * game and exit the game.
+ */
 public class MenuPanel extends JPanel {
 
     private final Image     backgroundImage;

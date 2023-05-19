@@ -14,6 +14,14 @@ import javax.swing.JPanel;
 
 import com.coffee.citybuilder.view.MainWindow;
 
+
+/**
+ * A custom dialog show when user clicks exit
+ * 
+ * This custom dialog s shown when the user tries to close
+ * the program, it gives him a choice if he wants to exit, 
+ * thus preventing a user from exiting accidentally.
+ */
 public class ExitConfirmationDialog extends JDialog implements ActionListener {
     private boolean confirmed = false;
 
@@ -71,10 +79,21 @@ public class ExitConfirmationDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
+    /**
+     * Returns ture if the user clicked he is sure he
+     * wants to exit.
+     * 
+     * @return boolean
+     */
     public boolean isConfirmed() {
         return confirmed;
     }
 
+    /**
+     * Used to overwrite base behaviour so that we can catch clicks and close?
+     * 
+     * @param e - ActionEvent
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Yes")) {
@@ -83,6 +102,11 @@ public class ExitConfirmationDialog extends JDialog implements ActionListener {
         dispose();
     }
 
+    /**
+     * Custom Text Label class so that it fits 
+     * in nicely with other components
+     * 
+     */
     private static class TextLabel extends JPanel {
         private String text;
 

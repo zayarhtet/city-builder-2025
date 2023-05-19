@@ -10,6 +10,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Database class that is used to save the current state of the games
+ * 
+ * This class works with json files. Into a json files it writes the
+ *  current game after it's finished or can load all games from last session.
+ */
 public class Database {
     private Gson gson;
     private String filePath;
@@ -21,6 +27,14 @@ public class Database {
         this.fileName = "userdata.json";
     };
 
+    /**?
+     * Saves the current game into a json file
+     * 
+     * We pass all games so that the ___ with Gson would be easier
+     * 
+     * @param cities - list of City objects that represent 
+     * the current and all the previus games
+     */
     public void saveData(List<City> cities){
         try {
             FileWriter writer = new FileWriter(this.filePath + "/" + this.fileName);
@@ -30,6 +44,16 @@ public class Database {
         } catch (IOException e) {System.out.println(e.toString());}
     }
 
+    /**
+     * Loads all prevuos games from json file
+     * 
+     * Based on the save path it, it uses Gson to transforn the
+     * json data into a list of City objects. It also checks if
+     * the file is saved in that path, if not it creates such file
+     * and reutrns an empty list.
+     * 
+     * @return list of City objects, from which we can restore the game
+     */
     public List<City> loadData() {
         Type citiesListType = new TypeToken<ArrayList<City>>(){}.getType();
 
