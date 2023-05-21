@@ -1,5 +1,8 @@
 package com.coffee.citybuilder.model;
 
+/**
+ * Class used to represent our individual datetime format.
+ */
 public class DateTime {
     private int year;
     private int month;
@@ -22,15 +25,32 @@ public class DateTime {
         this.refreshDateString();
     }
 
+    /**
+     * Regenerates the datetime string which is displayed to the user.in out custom
+     * format
+     */
     private void refreshDateString() {
         currentDateString = year + "." + (month < 10 ? "0" + month : month) + "." + (day < 10 ? "0" + day : day) + " "
                 + (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute);
     }
 
+    /**
+     * Returns a strig which represents current date
+     * 
+     * Used by view to shave in game time
+     * 
+     * @return String
+     */
     public String getDate() {
         return currentDateString;
     }
 
+    /**
+     * Move in game tie by a minute
+     * 
+     * Uses our own logic to move in game time one minute. Handles going over
+     * hours/days/etc.
+     */
     public void timeMove() {
         this.minute++;
         if (this.minute >= 60) {
@@ -53,6 +73,15 @@ public class DateTime {
         refreshDateString();
     }
 
+    /**
+     * Returns the maximum amount of days in a month
+     * 
+     * Used when moving time to know when to swith the month
+     * 
+     * @link DateTime#timeMove
+     * @return int of max days
+     * 
+     */
     public int getMaxDay() {
         switch (this.month) {
             case 1:
@@ -69,12 +98,29 @@ public class DateTime {
             case 11:
                 return 30;
             case 2:
-//                if (isLeapYear(year)) return 29;
+                // if (isLeapYear(year)) return 29;
                 return 28;
         }
         return 0;
     }
 
-    public boolean isYearEnd() { return this.yearGone; }
-    public void doneYearEnd() { this.yearGone = false; }
+    /**
+     * Used to know if we have moved up a year
+     * 
+     * year gone is set to true when time moves changes the yea
+     * 
+     * @return booean if it's a new year
+     */
+    public boolean isYearEnd() {
+        return this.yearGone;
+    }
+
+    /**
+     * Is used after new year has happened. To reset the year gone parameter. So
+     * that the end year calculations would not be done every day after the first
+     * new year.
+     */
+    public void doneYearEnd() {
+        this.yearGone = false;
+    }
 }

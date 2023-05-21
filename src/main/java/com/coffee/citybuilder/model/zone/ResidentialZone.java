@@ -9,17 +9,23 @@ import java.util.Random;
 
 import static com.coffee.citybuilder.resource.Constant.Initial_Population;
 
+/**
+ * Class used to store residential zones in the city.
+ * 
+ * It generates the amount of citizens able to work.
+ */
 public class ResidentialZone extends Zone {
 
     public ResidentialZone(Position p) {
-        super(p); super.ct = CellItem.RESIDENTIAL;
-        super.citizens = new ArrayList<>(); super.numOfPeople = 0;
+        super(p);
+        super.ct = CellItem.RESIDENTIAL;
+        super.citizens = new ArrayList<>();
+        super.numOfPeople = 0;
         Random rand = new Random();
         for (int i = 0; i < Initial_Population; i++) {
             citizens.add(new Citizen(rand.nextInt(82)));
             numOfPeople++;
         }
     }
-
 
 }

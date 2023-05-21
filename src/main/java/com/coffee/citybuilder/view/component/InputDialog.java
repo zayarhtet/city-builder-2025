@@ -20,6 +20,11 @@ import javax.swing.JTextField;
 
 import com.coffee.citybuilder.view.MainWindow;
 
+/**
+ * Input dialog box to get user inputs.
+ * 
+ * Is used forthe user to inputs his name when creating a new game.
+ */
 public class InputDialog extends JDialog {
 
     private JTextField textField;
@@ -38,14 +43,35 @@ public class InputDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Returns if the user decided to keep his written name.
+     * 
+     * When user inputs the name and closes without saveing the name,
+     * this is set to false, if user confirms it is his name, this will
+     * be set to true.
+     * 
+     * @return boolean
+     */
     public boolean isInputValid() {
         return inputValid;
     }
 
+    /**
+     * Used by other to componets to get username
+     * to use when saving the game.
+     * 
+     * @return String of inputed name
+     */
     public String getInput() {
-        return inputValid? textField.getText() : "";
+        return inputValid ? textField.getText() : "";
     }
 
+    /**
+     * Initializes all required GUI components and actions listeners.
+     * 
+     * Initializes text, and buttons in the imput box. als the actions
+     * to be taken when a button is clicked.
+     */
     private void initComponents() {
         JPanel contentPane = new JPanel();
         contentPane.setBackground(MainWindow.BG_COLOR);
@@ -120,10 +146,10 @@ public class InputDialog extends JDialog {
         });
     }
 
-//    @Override
-//    public void paintComponent(Graphics g) {
-//        super.paintComponent(g);
-//        // Draw your modern UI here
-//    }
+    // @Override
+    // public void paintComponent(Graphics g) {
+    // super.paintComponent(g);
+    // // Draw your modern UI here
+    // }
 
 }
