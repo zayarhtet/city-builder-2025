@@ -7,6 +7,9 @@ import com.coffee.citybuilder.model.CellItem;
 import com.coffee.citybuilder.model.City;
 import com.coffee.citybuilder.view.MainWindow;
 
+/**
+ * this class will show the statistics of a selected building
+ */
 public class StatisticPanel extends JPanel {
 
     private JLabel budgetLabel, satisfactionLabel, populationLabel, timeLabel;
@@ -15,6 +18,10 @@ public class StatisticPanel extends JPanel {
     private City city;
     private boolean isOn = false;
 
+    /**
+     * Init method
+     * @param frame the frame we want to show on
+     */
     public StatisticPanel(MainWindow frame) {
         this.frame = frame;
         setPreferredSize(new Dimension(1000, 50));
@@ -133,11 +140,18 @@ public class StatisticPanel extends JPanel {
         add(infoBtn);
     }
 
+    /**
+     * this method will copy a given city into local city variable
+     * @param city a city to copy from
+     */
     public void setCity(City city) {
         this.city = city;
         syncLabels();
     }
 
+    /**
+     * this method sets the values of the labels accordingly
+     */
     public void syncLabels() {
         if (city == null) return;
         budgetLabel.setText("$"+ city.getBudget());

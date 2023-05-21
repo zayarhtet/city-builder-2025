@@ -12,6 +12,9 @@ import com.coffee.citybuilder.resource.ResourceLoader;
 
 import java.lang.Math;
 
+/***
+ * Animator class for handling animations of disasters
+ */
 public class Animator {
     private Disaster disaster;
     private Position end;
@@ -32,6 +35,11 @@ public class Animator {
     private int FPS = 45;
     private AnimState state = AnimState.SPAWN;
 
+    /**
+     *
+     * @param d disaster type to deploy
+     * @param endP the point where the disaster will fall
+     */
     public void SetUp(Disaster d, Position endP){
         endP = new Position(endP.y,endP.x);
 
@@ -53,6 +61,11 @@ public class Animator {
         }
     }
 
+    /**
+     *
+     * @param d disaster type
+     * @throws IOException
+     */
     private void LoadSprites(Disaster d) throws IOException {
         //sprites.clear();
         for(int i=0; i<keys.length; i++){
@@ -61,6 +74,10 @@ public class Animator {
         }
     }
 
+    /**
+     * calculates the direction of the disaster accordingly
+     * @param end point
+     */
     void SetDirection(Position end){
         // row 22 col 33
         int midx = 13,midy = 8;
@@ -77,6 +94,11 @@ public class Animator {
         }
     }
 
+    /**
+     * sets the velocity of the disaster so it doesn't lag behind the frames
+     * @param start point of disaster
+     * @param end point of disaster
+     */
     void SetVelocity(Position start,Position end){
 
         double multiplier = Math.abs(start.x - end.x) / disaster.speed;
@@ -84,6 +106,10 @@ public class Animator {
         speedx = disaster.speed;
     }
 
+    /**
+     * main function to animate the disaster
+     * @param g Graphics that we will draw on
+     */
     public void Animate(Graphics2D g){
         if(!isAnimating) {
             return;
@@ -117,6 +143,10 @@ public class Animator {
 
     }
 
+    /**
+     * This function change the state of the disaster
+     * SPAWN -> MOVE -> ATTACK according to the distance travelled
+     */
     void ChangeState(){
 
 
@@ -151,6 +181,10 @@ public class Animator {
 
     }
 
+    /**
+     * Method to draw spawn animation
+     * @param g Graphics we will draw on
+     */
     void SpawnAnim(Graphics2D g){
         step++;
         if(step > (2 * FPS) / 5){
@@ -164,6 +198,10 @@ public class Animator {
         g.drawImage(img,AffineTransform.getTranslateInstance(drawx-60,drawy-90),null);
     }
 
+    /**
+     * method to draw moving animation
+     * @param g Graphics we will draw on
+     */
     void MoveAnim(Graphics2D g){
 
         step++;
@@ -185,22 +223,10 @@ public class Animator {
         g.drawImage(img,AffineTransform.getTranslateInstance(drawx,drawy),null);
     }
 
-    void PrepAnim(Graphics2D g){
-        step++;
-        if(step > (2 * FPS) / 3){
-            imgIndex = ( imgIndex+1 ) % 4 ;
-            imgIndex++;
-            step = 0;
-        }
-        String key = "Prep" + imgIndex;
-        Image img = sprites.get( key );
-
-        drawx = drawx + (speedx * dirx);
-        drawy = drawy + (speedy * diry);
-        if(img == null) return;
-        g.drawImage(img,AffineTransform.getTranslateInstance(drawx,drawy),null);
-    }
-
+    /**
+     * Method to draw attack animation
+     * @param g Graphics we will draw on
+     */
     void AttackAnim(Graphics2D g){
         step++;
         if(step >= FPS ){
@@ -213,9 +239,16 @@ public class Animator {
         g.drawImage(img,AffineTransform.getTranslateInstance(drawx,drawy),null);
     }
 
+    /**
+     * this function checks whether the animator is currently busy or not
+     * @return boolean
+     */
     public boolean isAnimating() { return isAnimating; }
 }
 
+/**
+ * Animation states of the disaster
+ */
 enum AnimState {
     SPAWN,MOVE, ATTACK
 }

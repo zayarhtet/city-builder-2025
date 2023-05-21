@@ -7,6 +7,10 @@ import com.coffee.citybuilder.view.MainWindow;
 
 import java.awt.*;
 
+/**
+ * this class is to handle the buttons for in-game activities such as
+ * assigning zones, constructing buildings and roads, deleting, starting disasters
+ */
 public class InGameButtonPanel extends JPanel {
     private MainWindow frame;
     public InGameButtonPanel(MainWindow frame, Color theme) {

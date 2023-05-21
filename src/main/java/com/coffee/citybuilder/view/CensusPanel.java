@@ -6,12 +6,20 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * this class will show the statistics of the whole city
+ */
 public class CensusPanel extends JPanel {
     private MainWindow  frame;
     private JButton     backButton;
     private JLabel populationLabel, employedPopulationLabel, vacancyLabel, unemployedPopulationLabel,
             totalBuildingLabel, buildingWithElectricityLabel, budgetLabel, residentialZonesLabel,
             serviceIndustrialZonesLabel, totalRoadLabel, satisfactionLabel, electricityPopulationLabel;
+
+    /**
+     * Init method
+     * @param mw the frame we want to show on
+     */
     public CensusPanel(MainWindow mw) {
         this.frame = mw;
         setPreferredSize(new Dimension(800, 400));
@@ -110,6 +118,10 @@ public class CensusPanel extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Sets the lables accordingly
+     * @param city the city
+     */
     public void syncCensus(City city) {
         populationLabel.setText("Population: " + city.getPopulation());
         employedPopulationLabel.setText("Employed Population: " + city.getEmployedCount());

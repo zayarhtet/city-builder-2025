@@ -10,6 +10,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * this class will show the purchases and reimbursement made
+ */
 public class TransactionPanel extends JPanel {
 
     private JTable table;
@@ -20,6 +23,12 @@ public class TransactionPanel extends JPanel {
     private MainWindow frame;
 
     private Bank bank;
+
+    /**
+     * Init method
+     * @param bank money storage class of our city
+     * @param mw frame we want to show on
+     */
     public TransactionPanel(Bank bank, MainWindow mw) {
         this.bank = bank; this.frame = mw;
 
@@ -80,6 +89,10 @@ public class TransactionPanel extends JPanel {
         setVisible(false);
     }
 
+    /**
+     * set the content of the table to the bank's transactions
+     * @param bank
+     */
     public void syncTable(Bank bank) {
         this.bank = bank;
         tableModel.setRowCount(0);

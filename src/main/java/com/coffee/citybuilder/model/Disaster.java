@@ -1,8 +1,10 @@
 package com.coffee.citybuilder.model;
 
+/**
+ * Disaster type to deploy on user's command
+ */
 public enum Disaster {
-    Titan("RUN!!!!",1,40,80),
-    Storm("HEAVY RAIN",1, 40, 40);
+    Titan("RUN!!!!",1,40,80);
 
     private final String text;
     public final int width, height;
