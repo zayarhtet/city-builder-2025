@@ -490,7 +490,7 @@ public class City {
 
         // Calculate overall satisfaction score
         double satisfactionScore = populationScore + policeCoverageScore + stadiumAccessScore + electricityAccessScore
-                + (b.getCanWork()? distanceToWorkScore: 0) + pensionerCountScore + employedScore;
+                - (b.getCanWork()? distanceToWorkScore: 0) + pensionerCountScore + employedScore;
 
 
         return new ZoneInfo(b.getPopulation(), b.getPensionerCount(),satisfactionScore,b.getCanWork()? b.getPopulation(): 0,b.isHasPolice(),b.isHasStadium(), b.isHasElectricity());
