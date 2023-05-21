@@ -16,6 +16,14 @@ public class Game {
         this.database = new Database();
         allSavedCities = database.loadData();
     }
+
+    /**
+     * Load a City with id and username.
+     * If the id is empty string, then new game is created, and store it in the database
+     * @param id ID of the game
+     * @param username username of the game
+     * @return City Object
+     */
     public City loadCity(String id, String username) {
         if (id.length() == 0) {
             City city = new City(username);
@@ -29,16 +37,18 @@ public class Game {
         }
         return null;
     }
+
+    /**
+     * Save the city arraylist into the database.
+     */
     public void saveCities() {
         database.saveData(allSavedCities);
     }
-    public void removeCity(String id) {
-        Iterator iter = allSavedCities.iterator();
-        while (iter.hasNext()) {
-            City city = (City) iter.next();
-            if (city.getId().equals(id)) iter.remove();
-        }
-    }
+
+    /**
+     * Get all cities
+     * @return City List
+     */
     public List<City> getAllCities() {
         return this.allSavedCities;
     }

@@ -61,7 +61,12 @@ public class City {
         assignZone(new Position(rand.nextInt(col-2), rand.nextInt(row-2)), CellItem.RESIDENTIAL);
         assignZone(new Position(rand.nextInt(col-2), rand.nextInt(row-2)), CellItem.RESIDENTIAL);
     }
-    
+
+    /**
+     * Build road
+     * @param p position to build
+     * @param ct CellItem type
+     */
     public void buildRoad(Position p, CellItem ct) {
         if (bank.cost("Road", ROAD_COST)) {
             cells[p.y][p.x] = ct;
@@ -70,6 +75,11 @@ public class City {
         }
     }
 
+    /**
+     * Build transmission line
+     * @param p position
+     * @param ct CellItem
+     */
     public void buildTransmissionLine(Position p, CellItem ct) {
         if (bank.cost("Transmission Line", ROAD_COST)) {
             cells[p.y][p.x] = ct;
@@ -78,6 +88,11 @@ public class City {
         refreshConnection();
     }
 
+    /**
+     * Build Zone
+     * @param p position
+     * @param ct CellItem
+     */
     public void assignZone(Position p, CellItem ct) {
         if (isOccupied(p)) return;
         if (!bank.cost(ct.toString(), ct.price)) return;
@@ -101,6 +116,11 @@ public class City {
         calculateServiceAccess();
     }
 
+    /**
+     * Construct Building
+     * @param p position
+     * @param c CellItem
+     */
     public void constructBuilding(Position p, CellItem c) {
         int radius = c.tiles - 1;
         int offset = 2; // offset for InGameButtonPanel
@@ -142,6 +162,10 @@ public class City {
         calculateServiceAccess();
     }
 
+    /**
+     * Delete Anything on the map
+     * @param p position to delete
+     */
     public void demolish(Position p) {
         CellItem ct = cells[p.y][p.x];
         switch (ct) {
@@ -175,6 +199,10 @@ public class City {
         setModifiedDate();
     }
 
+    /**
+     * Delete Zone
+     * @param p Position to delete
+     */
     public void deleteZone(Position p) {
         CellItem ct = cells[p.y][p.x];
         cells[p.y][p.x] = CellItem.GENERAL;
@@ -193,6 +221,10 @@ public class City {
         bank.earn("Demolish " + ct.toString(), reimbursement(ct.price));
     }
 
+    /**
+     * Delete Road
+     * @param p Position to delete
+     */
     public void deleteRoad(Position p) {
         CellItem ct = cells[p.y][p.x];
         for (Zone z : zones) {
@@ -203,6 +235,10 @@ public class City {
         bank.earn("Demolish Road", reimbursement(ct.price));
     }
 
+    /**
+     * Delete transmission line
+     * @param p Position to delete
+     */
     public void deleteTransmissionLine(Position p) {
         CellItem ct = cells[p.y][p.x];
         cells[p.y][p.x] = CellItem.GENERAL;
@@ -210,6 +246,10 @@ public class City {
         bank.earn("Demolish Transmission Line", reimbursement(ct.price));
     }
 
+    /**
+     * Delete Building
+     * @param p Position to delete
+     */
     public void deleteBuilding(Position p) {
         Position d = new Position(p.y, p.x);
         int ind = -1;
@@ -229,6 +269,9 @@ public class City {
         bank.earn("Demolish " + ct.toString(), reimbursement(ct.price));
     }
 
+    /**
+     * Refresh the connection between zones (work and residential)
+     */
     private void refreshConnection() {
         employedCount = 0;
         vacantCount = 0;
@@ -265,6 +308,12 @@ public class City {
         }
     }
 
+    /**
+     * Check if two position are connected by Road with Breadth First Search
+     * @param start Start Position
+     * @param end End Position
+     * @return boolean
+     */
     private boolean isConnected(Position start, Position end) {
         CellItem ctStart = cells[start.y][start.x];
         CellItem ctEnd = cells[end.y][end.x];
@@ -305,6 +354,12 @@ public class City {
         return false;
     }
 
+    /**
+     * Check if the building is connected with transmission line
+     * @param start Start Position
+     * @param end End Position
+     * @return boolean
+     */
     private boolean canTransmit(Position start, Position end) {
         boolean[][] visited = new boolean[row][col];
         visited[start.x][start.y] = true;
@@ -366,6 +421,9 @@ public class City {
         return false;
     }
 
+    /**
+     * Refresh the connection between Residential and PowerPlant
+     */
     private void supplyElectricity() {
 
         for (Building b : buildings) { b.setHasElectricity(false); }
@@ -402,15 +460,35 @@ public class City {
             }
         }
     }
+
+    /**
+     * Spawn Disaster
+     * @return Disaster Object
+     */
     public Disaster spawnDisaster() {
         Random r = new Random();
         int i = r.nextInt(1);
         return Disaster.values()[i];
     }
+
+    /**
+     * Distance between 2 Position
+     * @param a Position 1
+     * @param b Position 2
+     * @return int - distance
+     */
     private int distance(Position a, Position b) {
         double d = Math.sqrt((a.y - b.y) * (a.y - b.y) + (a.x - b.x) * (a.x - b.x));
         return (int) Math.ceil(d);
     }
+
+    /**
+     * Check if any given CellItem is within the given radius with the position as a Centre.
+     * @param p Center
+     * @param radius Radius
+     * @param ct Target CellItem
+     * @return boolean
+     */
     private boolean withinRadius(Position p, int radius, CellItem ct) {
         Position rows = new Position(Math.max(p.y - radius, 0), Math.min(p.y + radius, row));
         Position columns = new Position(Math.max(p.x - radius, 0), Math.min(p.x + radius, col));
@@ -422,6 +500,10 @@ public class City {
         }
         return false;
     }
+
+    /**
+     * Refresh the connection between Residential and Service Building
+     */
     private void calculateServiceAccess() {
         this.safetyAccess = this.relaxAccess = 0;
 
@@ -438,6 +520,11 @@ public class City {
             }
         }
     }
+
+    /**
+     * Calculate the satisfaction
+     * @return double
+     */
     public double getSatisfaction() {
         double policePercentage = (double) safetyAccess / population * 100;
         double relaxationPercentage = (double) relaxAccess / population * 100;
@@ -451,6 +538,12 @@ public class City {
 
         return (double) Math.round(satisfaction * 100) / 100;
     }
+
+    /**
+     * Get the zone information
+     * @param p Zone Position
+     * @return ZoneInfo object
+     */
     public ZoneInfo getZoneInfo(Position p) {
         // search p inside zones and obtain Zone object
         // calculate the following values
@@ -495,10 +588,22 @@ public class City {
 
         return new ZoneInfo(b.getPopulation(), b.getPensionerCount(),satisfactionScore,b.getCanWork()? b.getPopulation(): 0,b.isHasPolice(),b.isHasStadium(), b.isHasElectricity());
     }
+
+    /**
+     * Simplify the value
+     * @param value Value
+     * @param min Minimum
+     * @param max Maximum
+     * @return double
+     */
     private double normalizeValue(int value, int min, int max) {
         // Normalize the value to a percentage scale
         return ((double) (value - min) / (max - min)) * 100;
     }
+
+    /**
+     * Time spent
+     */
     public void timeGone() {
         datetime.timeMove();
         setModifiedDate();
@@ -517,12 +622,24 @@ public class City {
             datetime.doneYearEnd();
         }
     }
+
+    /**
+     * Collect tax
+     */
     private void collectTax() {
         bank.earn("Taxation from Industries", (int)(employedCount*0.2));
     }
+
+    /**
+     * Pay Pension
+     */
     private void payPension() {
-            bank.cost("Pension", pensionerCount*3 );
+        bank.cost("Pension", pensionerCount*3 );
     }
+
+    /**
+     * Pay Maintenance fee
+     */
     private void spendMaintenanceFee() {
         bank.cost("Building Maintenance", buildings.size()*1);
         bank.cost("Road Maintenance", (int)(roads.size()*0.5));

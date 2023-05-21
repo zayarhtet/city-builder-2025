@@ -108,6 +108,9 @@ public class LoadGamePanel extends JPanel {
         setVisible(false);
     }
 
+    /**
+     * Synchronize the loadgame table
+     */
     public void syncTable() {
         tableModel.setRowCount(0);
         Object[] rowData = new Object[3];

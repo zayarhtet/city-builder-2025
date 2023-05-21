@@ -144,7 +144,16 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
     }
 
     /*************************************** Vehicles Starts ****************************************/
+    /**
+     * Set the Vehicle Framerate
+     * @param i
+     */
     public void setVehicleFrameRate(int i) { this.vehicleFrameRate = i; }
+
+    /**
+     * Rendering Vehicle
+     * @param gr Graphics2D object to render
+     */
     public void renderVehicles(Graphics2D gr) {
         for (int col = 0; col < vehiclesCol.length; col++) {
             Vehicle v = vehiclesCol[col];
@@ -167,6 +176,13 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
             else gr.drawImage(graphics.get(CellItem.L_CAR), v.getValue(), row*tile_size, tile_size, tile_size, null);
         }
     }
+
+    /**
+     *
+     * @param original
+     * @param upperBound
+     * @return
+     */
     private int calculateIgnoreRoad(Vehicle original, int upperBound) {
         int newValue;
         if (original.isGoRightOrDown()) {
@@ -184,6 +200,16 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         }
         return newValue;
     }
+
+    /**
+     * Calculate the vehicle next movement
+     * @param v - vehicle object
+     * @param fixedAxisIndex - Axis Index
+     * @param upperBound - UpperBound
+     * @param transposeAisle - transpose vehicle array
+     * @param isGoRightOrDown - Direction
+     * @return int vehicle's next move
+     */
     private int calculateVehicleMovement(Vehicle v, int fixedAxisIndex, int upperBound, Vehicle[] transposeAisle, boolean isGoRightOrDown) {
         int newValue;
         if (isGoRightOrDown) {
@@ -205,9 +231,23 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         }
         return newValue;
     }
+
+    /**
+     * Checking if 2 rectangle are touching.
+     * @param firstX
+     * @param firstY
+     * @param secondX
+     * @param secondY
+     * @return
+     */
     private boolean isTwoTileTouching(int firstX, int firstY, int secondX, int secondY) {
         return firstX < secondX+tile_size && firstX+tile_size > secondX && firstY < secondY+tile_size && firstY+tile_size > secondY;
     }
+
+    /**
+     * Initiating the vehicle arrays.
+     * @param vehicleCount
+     */
     public void initiateRandomVehicles(int vehicleCount) {
         vehiclesRow = new Vehicle[city.getRowCount()];
         vehiclesCol = new Vehicle[city.getColumnCount()];
@@ -220,7 +260,10 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         }
     }
     /*************************************** Vehicles Ends ****************************************/
-
+    /**
+     * Initiate the disaster
+     * @param em
+     */
     void initDisaster(EventModel em){
         Disaster d = city.spawnDisaster();
         Random r = new Random();
@@ -230,6 +273,10 @@ public class CityMap extends JPanel implements MouseMotionListener, MouseListene
         anim.SetUp(d,ds);
     }
 
+    /**
+     * ZoneInfo Dialog Popup
+     * @param p
+     */
     public void info(Position p) {
         if(city.getCellItem(p.y,p.x) != CellItem.RESIDENTIAL) return;
         ZoneInfo message = city.getZoneInfo(p);

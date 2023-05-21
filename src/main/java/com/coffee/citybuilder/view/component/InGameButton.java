@@ -11,6 +11,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 
+/**
+ * InGameButton that extends JButton Object with MouseListener
+ */
 public class InGameButton extends JButton implements MouseListener {
     private final Image element;
     private final String imgPath;

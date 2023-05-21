@@ -73,12 +73,20 @@ public class MainWindow extends JFrame {
         pack();
         setVisible(true);
     }
+
+    /**
+     * Double Speed
+     */
     public void doubleSpeed() {
         inGameTimer.stop();
         inGameTimer.setDelay(50);
         map.setVehicleFrameRate(2);
         inGameTimer.start();
     }
+
+    /**
+     * Normal Speed
+     */
     public void normalSpeed() {
         inGameTimer.stop();
         inGameTimer.setDelay(500);
@@ -98,6 +106,11 @@ public class MainWindow extends JFrame {
         transactionPanel.syncTable(bank);
         transactionPanel.setVisible(true);
     }
+
+    /**
+     * Initialize the Census Page
+     * @param city
+     */
     public void showCensusPage(City city) {
         if (censusPanel == null) {
             add(this.censusPanel = new CensusPanel(this), BorderLayout.CENTER);
@@ -111,12 +124,22 @@ public class MainWindow extends JFrame {
     public void hideCensusPage() {
         censusPanel.setVisible(false);
     }
+
+    /**
+     * Initialize the LoadGame Panel
+     */
     public void instantiateLoadGame() {
         if (loadGamePanel == null) {
             add(loadGamePanel = new LoadGamePanel(this.game.getAllCities(),  this));
         }
         loadGamePanel.syncTable();
     }
+
+    /**
+     * Initialize the game
+     * @param id
+     * @param username
+     */
     public void instantiateGame(String id, String username) {
         if (map == null) {
             try { add(map = new CityMap(this), BorderLayout.CENTER); } catch (IOException e) {}

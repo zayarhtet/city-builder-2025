@@ -17,10 +17,17 @@ public class Vehicle {
         this.value = value;
     }
 
+    /**
+     * Check the direction
+     * @return boolean
+     */
     public boolean isGoRightOrDown() {
         return goRightOrDown;
     }
 
+    /**
+     * Set the direction
+     */
     public void setGoRightOrDown() {
         if (this.goRightOrDown) this.goRightOrDown = false;
         else this.goRightOrDown = true;
