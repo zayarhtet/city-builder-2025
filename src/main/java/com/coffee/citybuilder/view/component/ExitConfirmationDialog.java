@@ -1,4 +1,5 @@
 package com.coffee.citybuilder.view.component;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,12 +15,11 @@ import javax.swing.JPanel;
 
 import com.coffee.citybuilder.view.MainWindow;
 
-
 /**
- * A custom dialog show when user clicks exit
+ * A custom dialog show when user clicks exit.
  * 
  * This custom dialog s shown when the user tries to close
- * the program, it gives him a choice if he wants to exit, 
+ * the program, it gives him a choice if he wants to exit,
  * thus preventing a user from exiting accidentally.
  */
 public class ExitConfirmationDialog extends JDialog implements ActionListener {
@@ -52,7 +52,6 @@ public class ExitConfirmationDialog extends JDialog implements ActionListener {
         buttonPanel.setBackground(MainWindow.BG_COLOR);
         buttonPanel.setLayout(new BorderLayout());
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
-
 
         // Create cancel button
         JButton cancelButton = new JButton("No");
@@ -90,7 +89,8 @@ public class ExitConfirmationDialog extends JDialog implements ActionListener {
     }
 
     /**
-     * Used to overwrite base behaviour so that we can catch clicks and close?
+     * Used to overwrite base behaviour so that we can catch clicks and close the
+     * game.
      * 
      * @param e - ActionEvent
      */
@@ -103,9 +103,7 @@ public class ExitConfirmationDialog extends JDialog implements ActionListener {
     }
 
     /**
-     * Custom Text Label class so that it fits 
-     * in nicely with other components
-     * 
+     * Custom Text Label class so that it fits in nicely with other components.
      */
     private static class TextLabel extends JPanel {
         private String text;

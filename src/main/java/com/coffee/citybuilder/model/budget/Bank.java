@@ -17,16 +17,18 @@ public class Bank {
     private int budget;
     private List<Transaction> expenses;
     private List<Transaction> income;
+
     /**
-     * Contructor that initializes new bank class
+     * Contructor that initializes new bank class.
      */
-    public Bank(){
+    public Bank() {
         this.budget = Initial_BUDGET;
         this.expenses = new ArrayList<>();
         this.income = new ArrayList<>();
     }
+
     /**
-     * Contructor when the player has already played the game and want to contnue
+     * Contructor when the player has already played the game and want to contnue.
      * 
      * @param bank a bank class left from the previuos sessions
      */
@@ -35,14 +37,16 @@ public class Bank {
         this.expenses = new ArrayList<>(bank.expenses);
         this.income = new ArrayList<>(bank.income);
     }
+
     /**
-     * Subtract and amount from the budget
+     * Subtract and amount from the budget.
      * 
-     * Generates a transaction based on parameters subtracts the required amount from the
-     * budget.
+     * Generates a transaction based on parameters subtracts the required amount
+     * from the budget.
      * 
-     * @param reason where the amount was spents (building roads/buildings/maintenance ect.)
-     * @param value the amuont spents
+     * @param reason where the amount was spents (building
+     *               roads/buildings/maintenance ect.)
+     * @param value  the amuont spents
      * 
      * @return always true
      */
@@ -54,13 +58,13 @@ public class Bank {
     }
 
     /**
-     * Add an amount to the budget
+     * Add an amount to the budget.
      * 
      * Generates a transaction based on parameters adds the required amount to the
      * budget.
      * 
      * @param reason how the amount was earned (taxes)
-     * @param value the amuont earned
+     * @param value  the amuont earned
      * 
      * @return always true
      */
@@ -70,24 +74,31 @@ public class Bank {
         income.add(trans);
         return true;
     }
-     /**
-     * Method to get all expense transactions
+
+    /**
+     * Method to get all expense transactions.
      * 
      * @return array list of expenses
      */
     public List<Transaction> getExpenses() {
         return new ArrayList<>(expenses);
     }
+
     /**
-     * Method to get all income transactions
+     * Method to get all income transactions.
      * 
      * @return array list of income transactions
      */
-    public List<Transaction> getIncomes() { return new ArrayList<>(income); }
+    public List<Transaction> getIncomes() {
+        return new ArrayList<>(income);
+    }
+
     /**
-     * Method to get the budget
+     * Method to get the budget.
      * 
      * @return the current budget amount
      */
-    public int getBudget() { return budget; }
+    public int getBudget() {
+        return budget;
+    }
 }

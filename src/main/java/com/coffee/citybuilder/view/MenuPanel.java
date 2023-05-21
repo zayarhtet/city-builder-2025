@@ -12,14 +12,13 @@ import java.io.IOException;
 /**
  * Main menu panel that display menu items.
  * 
- * This classdraws the menu GUI, by initiaizing buttons,
- *  which let the user start a new game, load a previuos 
- * game and exit the game.
+ * This classdraws the menu GUI, by initiaizing buttons, which let the user
+ * start a new game, load a previuos game and exit the game.
  */
 public class MenuPanel extends JPanel {
 
-    private final Image     backgroundImage;
-    private final MainWindow    frame;
+    private final Image backgroundImage;
+    private final MainWindow frame;
 
     private int GAP = 100;
     private int BORDER_SIZE = 380;
@@ -27,7 +26,7 @@ public class MenuPanel extends JPanel {
     public MenuPanel(MainWindow frame) throws IOException {
         this.frame = frame;
         backgroundImage = ResourceLoader.loadImage("resource/intro-bg.png");
-        setLayout(new BorderLayout(0,10));
+        setLayout(new BorderLayout(0, 10));
 
         JPanel menuTextPanel = new JPanel();
         menuTextPanel.setOpaque(false);
@@ -39,12 +38,12 @@ public class MenuPanel extends JPanel {
             InputDialog idialog = new InputDialog();
             gameName = idialog.getInput();
             if (gameName.length() > 0) {
-                frame.instantiateGame("",gameName);
+                frame.instantiateGame("", gameName);
                 this.frame.hideMenuPage();
                 this.frame.showMapPage();
             }
         });
-        
+
         menuTextPanel.add(newGameButton);
         menuTextPanel.add(Box.createRigidArea(new Dimension(0, GAP)));
 
@@ -84,12 +83,12 @@ public class MenuPanel extends JPanel {
         titlePanel.add(title);
         add(titlePanel, BorderLayout.NORTH);
 
-        setSize(new Dimension(1000,698));
+        setSize(new Dimension(1000, 698));
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(backgroundImage, 0,0,null);
+        g.drawImage(backgroundImage, 0, 0, null);
     }
 }
